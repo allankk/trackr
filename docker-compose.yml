@@ -1,0 +1,15 @@
+services:
+  fitness_db:
+    image: postgres:13
+    container_name: fitness_db
+    environment:
+      POSTGRES_USER: fitness_user
+      POSTGRES_PASSWORD: fitness_password
+      POSTGRES_DB: fitness_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
