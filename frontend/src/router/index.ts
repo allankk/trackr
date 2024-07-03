@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import HelloView from '../views/HelloView.vue'
+import LoginCard from '../components/LoginCard.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,7 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/hello',
     name: 'hello',
     component: HelloView
-  }
+  },
+  {
+    path: "/login",
+    component: LoginCard,
+  },
 ]
 
 const router = createRouter({
