@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import HelloView from '../views/HelloView.vue'
 import LoginCard from '../components/LoginCard.vue'
+import RegisterCard from '../components/RegisterCard.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     component: LoginCard,
+  },
+  {
+    path: "/register",
+    component: RegisterCard,
   },
 ]
 
