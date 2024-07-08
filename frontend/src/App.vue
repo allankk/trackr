@@ -1,13 +1,65 @@
 <template>
-  <nav class="py-4 mb-20 border-b border-slate-400">
-    <img alt="FitnessTrack logo" class="max-h-10 absolute top-2" src="./assets/fitnesstrack-logo.png">
-    <router-link class="px-6" to="/">Home</router-link>
-    <router-link class="px-6" to="/about">About</router-link>
-    <router-link class="px-6" to="/hello">Hello</router-link>
-    <router-link class="px-6 nav-link" to="/login">Login</router-link>
-  </nav>
-  <router-view/>
+  <div class="layout-wrapper" :class="containerClass">
+    <TopNav />
+    <div class="layout-sidebar">
+      <SideNav />
+    </div>
+    <div class="layout-main-container">
+      <div class="layout-main">
+        <router-view/>
+      </div>
+    </div>
+  </div>
 </template>
+
+<script setup>
+import { useLayout } from '@/components/menu/menuLayout';
+import { computed, watch, ref } from 'vue';
+import TopNav from './components/menu/TopNav.vue';
+import SideNav from './components/menu/SideNav.vue';
+
+const { layoutState, isSidebarActive } = useLayout();
+
+const outsideClickListener = ref(null);
+
+const containerClass = computed(() => {
+  return {
+    'layout-mobile-active': layoutState.staticMenuMobileActive.value
+  }
+})
+
+watch(isSidebarActive, (newVal) => {
+    if (newVal) {
+        bindOutsideClickListener();
+    } else {
+        unbindOutsideClickListener();
+    }
+});
+
+const bindOutsideClickListener = () => {
+    if (!outsideClickListener.value) {
+        outsideClickListener.value = (event) => {
+            if (isOutsideClicked(event)) {
+                layoutState.staticMenuMobileActive.value = false;
+            }
+        };
+        document.addEventListener('click', outsideClickListener.value);
+    }
+};
+const unbindOutsideClickListener = () => {
+    if (outsideClickListener.value) {
+        document.removeEventListener('click', outsideClickListener);
+        outsideClickListener.value = null;
+    }
+};
+const isOutsideClicked = (event) => {
+    const sidebarEl = document.querySelector('.layout-sidebar');
+    const topbarEl = document.querySelector('.layout-menu-button');
+
+    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+};
+
+</script>
 
 <style>
 #app {

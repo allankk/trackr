@@ -47,9 +47,12 @@
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.0.5",
     "postcss": "^8.4.39",
+    "sass": "^1.77.6",
+    "sass-loader": "^14.2.1",
     "tailwindcss": "^3.4.4",
     "ts-jest": "^27.0.4",
-    "typescript": "~4.5.5"
+    "typescript": "~4.5.5",
+    "vue-eslint-parser": "^9.4.3"
   },
   "eslintConfig": {
     "root": true,
@@ -64,6 +67,7 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
+    "parser": "vue-eslint-parser",
     "rules": {},
     "overrides": [
       {
