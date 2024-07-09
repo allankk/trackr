@@ -1,11 +1,16 @@
 import AuthService from '../services/AuthService';
 import { Commit } from "vuex";
 
+interface User {
+  email: string,
+  password: string
+}
+
 interface AuthState {
   status: {
     loggedIn: boolean;
   };
-  user: any;
+  user: User | null,
 }
 
 const user = JSON.parse(localStorage.getItem('user') as string);
@@ -17,7 +22,7 @@ export const auth = {
   namespaced: true,
   state: initialState,
   actions: {
-    login( { commit }: { commit: Commit }, user: any) {
+    login( { commit }: { commit: Commit }, user: User) {
       return AuthService.login(user.email, user.password).then(
         user => {
           commit('loginSuccess', user);
@@ -29,11 +34,11 @@ export const auth = {
         }
       );
     },
-    logout({ commit }: { commit: Commit }, user: any) {
+    logout({ commit }: { commit: Commit }) {
       AuthService.logout();
       commit('logout');
     },
-    register({ commit }: { commit: Commit }, user: any) {
+    register({ commit }: { commit: Commit }, user: User) {
       return AuthService.register(user.email, user.password).then(
         response => {
           commit('registerSuccess');
@@ -47,7 +52,7 @@ export const auth = {
     }
   },
   mutations: {
-    loginSuccess(state: AuthState, user: any) {
+    loginSuccess(state: AuthState, user: User) {
       state.status.loggedIn = true;
       state.user = user;
     },

@@ -26,7 +26,7 @@ import { useLayout } from '@/components/menu/menuLayout';
 
 const { layoutState, onMenuToggle } = useLayout();
 
-const props = defineProps({
+defineProps({
     item: {
         type: Object,
         default: () => ({})
@@ -43,7 +43,7 @@ const props = defineProps({
         type: String,
         default: null
     }
-})
+});
 
 const route = useRoute();
 const isActiveMenu = ref(false);

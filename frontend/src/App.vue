@@ -1,7 +1,7 @@
 <template>
   <div class="layout-wrapper" :class="containerClass">
     <TopNav />
-    <div class="layout-sidebar">
+    <div>
       <SideNav />
     </div>
     <div class="layout-main-container">
@@ -19,7 +19,6 @@ import TopNav from './components/menu/TopNav.vue';
 import SideNav from './components/menu/SideNav.vue';
 
 const { layoutState, isSidebarActive } = useLayout();
-
 const outsideClickListener = ref(null);
 
 const containerClass = computed(() => {
@@ -56,6 +55,9 @@ const isOutsideClicked = (event) => {
     const sidebarEl = document.querySelector('.layout-sidebar');
     const topbarEl = document.querySelector('.layout-menu-button');
 
+    if (!sidebarEl || !topbarEl) {
+      return false;
+    }
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
 

@@ -1,22 +1,19 @@
 <template>
-    <ul class="layout-menu">
-        <template v-for="(item, i) in filteredModel" :key="item">
-            <SideMenuItem :item="item" :index="i"></SideMenuItem>
-        </template>
-    </ul>
+    <div class="layout-sidebar" v-if="isScreenSmall || currentUser">
+        <ul class="layout-menu">
+            <template v-for="(item, i) in filteredModel" :key="item">
+                <SideMenuItem :item="item" :index="i"></SideMenuItem>
+            </template>
+        </ul>
+    </div>
 </template>
   
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from "vue";
-import { useStore } from "vuex";
+import { computed } from "vue";
+import { useLayout } from '@/components/menu/menuLayout';
 import SideMenuItem from '@/components/menu/SideMenuItem.vue';
 
-const store = useStore();
-const isScreenSmall = ref(window.innerWidth < 1024);
-
-const currentUser = computed(() => {
-    return store.state.auth.user;
-});
+const { currentUser, isScreenSmall } = useLayout();
 
 const userItems = computed(() => {
     if (currentUser.value) {
@@ -50,18 +47,6 @@ const filteredModel = computed(() => {
     return model.value.filter(item => item.label !== 'Home');
   }
   return model.value;
-});
-
-const updateScreenSize = () => {
-    isScreenSmall.value = window.innerWidth < 768;
-};
-
-onMounted(() => {
-    window.addEventListener("resize", updateScreenSize);
-});
-
-onUnmounted(() => {
-    window.removeEventListener("resize", updateScreenSize);
 });
 </script>
   
