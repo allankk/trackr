@@ -21,10 +21,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter  } from 'vue-router';
+import { useStore } from 'vuex';
 import { useLayout } from '@/components/menu/menuLayout';
-
-const { layoutState, onMenuToggle } = useLayout();
 
 defineProps({
     item: {
@@ -45,13 +44,21 @@ defineProps({
     }
 });
 
+const { layoutState, onMenuToggle } = useLayout();
 const route = useRoute();
 const isActiveMenu = ref(false);
 const itemKey = ref(null);
+const store = useStore();
+const router = useRouter();
 
 const itemClick = (event, item) => {
     if ((item.to || item.url) && (layoutState.staticMenuMobileActive.value)) {
         onMenuToggle();
+    }
+
+    if (item.action == 'logout') {
+        store.dispatch('auth/logout');
+        router.push('/login');
     }
 };
 

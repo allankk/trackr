@@ -4,6 +4,7 @@ import HelloView from '../views/HelloView.vue'
 import LoginCard from '../components/LoginCard.vue'
 import RegisterCard from '../components/RegisterCard.vue'
 import ProfileView from '../views/ProfileView.vue'
+import ExerciseView from '../views/ExerciseView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,11 +37,27 @@ const routes: Array<RouteRecordRaw> = [
     path: "/profile",
     component: ProfileView,
   },
+  {
+    path: "/exercises",
+    component: ExerciseView,
+  },
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/', '/login', '/register', '/home', '/hello', '/about'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router

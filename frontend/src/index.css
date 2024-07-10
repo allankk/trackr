@@ -3185,6 +3185,7 @@
       border-radius: 6px;
       outline-color: transparent;
     }
+
     .p-button:not(:disabled):hover {
       background: #059669;
       color: #ffffff;
