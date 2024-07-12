@@ -30,6 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         try {
             String jwt = parseJwt(request);
 
@@ -56,9 +57,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer: ")) {
+            logger.error("returning headerauth");
             return headerAuth.substring(7, headerAuth.length());
         }
 
+        logger.error("returning auth null");
         return null;
     }
 }

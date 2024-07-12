@@ -5,6 +5,7 @@ import LoginCard from '../components/LoginCard.vue'
 import RegisterCard from '../components/RegisterCard.vue'
 import ProfileView from '../views/ProfileView.vue'
 import ExerciseView from '../views/ExerciseView.vue'
+import UserBoard from '../components/UserBoard.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -40,6 +41,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/exercises",
     component: ExerciseView,
+  },
+  {
+    path: "/userboard",
+    component: UserBoard
   },
 ]
 

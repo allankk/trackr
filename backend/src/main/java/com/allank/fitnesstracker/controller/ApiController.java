@@ -1,5 +1,6 @@
 package com.allank.fitnesstracker.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,13 @@ public class ApiController {
     @GetMapping(path = "/hello")
     public String sayHello() {
         return "Hello from backend";
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/authhello")
+    @PreAuthorize("hasRole('USER')")
+    public String sayAuthHello() {
+        return "Hello from User";
     }
 
 }
