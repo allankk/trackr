@@ -11,7 +11,5 @@ public class Metric {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    @OneToMany(mappedBy = "metric", cascade = CascadeType.ALL)
-    private Set<ActivityMetric> activityMetrics = new HashSet<>();
+    private String unit;
 }

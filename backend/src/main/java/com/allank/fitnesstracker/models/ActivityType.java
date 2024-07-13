@@ -12,9 +12,14 @@ public class ActivityType {
     private Long id;
     private String name;
     private String description;
+    private boolean isDefault;
 
-    @OneToMany(mappedBy = "activityType", cascade = CascadeType.ALL)
-    private Set<String> metrics = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "activity_type_metrics",
+            joinColumns = @JoinColumn(name = "activity_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "metric_id"))
+    private Set<Metric> metrics = new HashSet<>();
 
     @OneToMany(mappedBy = "activityType", cascade = CascadeType.ALL)
     private Set<UserActivityType> userActivityTypes = new HashSet<>();
@@ -35,11 +40,11 @@ public class ActivityType {
         this.description = description;
     }
 
-    public Set<String> getMetrics() {
+    public Set<Metric> getMetrics() {
         return metrics;
     }
 
-    public void setMetrics(Set<String> metrics) {
+    public void setMetrics(Set<Metric> metrics) {
         this.metrics = metrics;
     }
 
@@ -57,5 +62,13 @@ public class ActivityType {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 }
