@@ -29,12 +29,6 @@ onMounted(() => {
           error.toString();
       }
     )
-
-      fetch("/api/hello")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('this is data' + data)
-      });
 });
 </script>
 

@@ -10,6 +10,13 @@ class ActivityService {
         headers: authHeader() 
     });
   }
+
+  getAllActivities() {
+    console.log('getting all activities')
+    return axios.get(API_AUTH_URL + 'activity/all', { 
+        headers: authHeader() 
+    });
+  }
 }
 
 export default new ActivityService();

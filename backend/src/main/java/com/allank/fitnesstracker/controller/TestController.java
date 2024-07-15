@@ -30,21 +30,17 @@ public class TestController {
 
         // Get authenticated user details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName(); // Or cast to your custom UserDetails for more info
+        String username = authentication.getName();
 
         // Optionally, you can access the authorities/roles
         String roles = authentication.getAuthorities().toString();
-
-        // Construct response with user details and token
 
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String usernameContext = userDetails.getUsername();
         String email = userDetails.getEmail();
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 
-        return String.format("user Content. Username: %s, Roles: %s, email: %s", usernameContext, email, authorities);
-
-        //return String.format("User Content. Username: %s, Roles: %s, Token: %s", username, roles, jwtToken);
+        return String.format("user Content. Email: %s, Roles: %s", email, authorities);
     }
 
     @GetMapping("/mod")
