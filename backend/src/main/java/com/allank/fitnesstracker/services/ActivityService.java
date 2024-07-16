@@ -37,8 +37,10 @@ public class ActivityService {
         return activityTypeRepository.findByIsDefault(true);
     }
 
-    public List<UserActivityType> getUserActivityTypes(Long userId) {
-        return userActivityTypeRepository.findByUserId(userId);
+    public List<ActivityType> getUserActivityTypes(Long userId) {
+        List<UserActivityType> userActivityTypes =  userActivityTypeRepository.findByUserId(userId);
+
+        return userActivityTypes.stream().map(UserActivityType::getActivityType).toList();
     }
 
     public void addCustomActivityTypeForUser(Long userId, String name, String description, Set<Long> metricIds) {
@@ -70,6 +72,10 @@ public class ActivityService {
         Set<ActivityType> activityTypes = new HashSet<>(activityTypeRepository.findAllById(activityTypeIds));
         activityGroup.setActivityTypes(activityTypes);
         activityGroupRepository.save(activityGroup);
+    }
+
+    public List<Metric> getAllMetrics() {
+        return metricRepository.findAll();
     }
 
     public void saveActivitySession(Long userId, Long activityTypeId, LocalDate date, Map<Long, String> metricValues) {

@@ -13,6 +13,7 @@
                 </div>
             </div>
             <div v-if="activity.isDefault" class="font-bold">default</div>
+            <div v-else></div>
         </div>
     </div>
   </div>
