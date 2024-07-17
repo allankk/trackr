@@ -56,6 +56,19 @@ public class ActivityTypeController {
     }
 
     @ResponseBody
+    @PostMapping(path = "/edit/{activityTypeId}")
+    public ResponseEntity<Object> editActivityType(
+            @PathVariable Long activityTypeId,
+            @RequestBody UserActivityTypeDto userActivityTypeDto) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+
+        activityService.updateActivityType(activityTypeId, userId, userActivityTypeDto.name(), userActivityTypeDto.description(), userActivityTypeDto.metrics());
+
+        return new ResponseEntity<>("Activity type updated successfully!", HttpStatus.OK);
+    }
+
+    @ResponseBody
     @DeleteMapping(path = "/delete/{activityTypeId}")
     public ResponseEntity<Object> deleteActivityType(@PathVariable Long activityTypeId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

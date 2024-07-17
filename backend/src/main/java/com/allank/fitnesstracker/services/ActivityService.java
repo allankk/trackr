@@ -54,6 +54,21 @@ public class ActivityService {
         activityTypeRepository.save(customActivityType);
     }
 
+    public void updateActivityType(Long activityTypeId, Long userId, String name, String description, Set<Long> metricIds) {
+        ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("Activity type not found"));
+
+        if (!activityType.getUser().getId().equals(userId)) {
+            throw new SecurityException("Unauthorized to update this activity type");
+        }
+
+        activityType.setName(name);
+        activityType.setDescription(description);
+        Set<Metric> metrics = new HashSet<>(metricRepository.findAllById(metricIds));
+        activityType.setMetrics(metrics);
+
+        activityTypeRepository.save(activityType);
+    }
+
     public void deleteUserActivityType(Long userId, Long activityTypeId) {
         ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("activity type not found"));
 

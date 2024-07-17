@@ -7,7 +7,7 @@
               <span v-if="activity.isDefault" class="md:ml-6 inline-flex items-center">default</span>
             </div>
             <div v-if="!activity.isDefault" class="flex items-center">
-              <Button icon="pi pi-pencil" severity="secondary" rounded outlined class="mx-2" />
+              <Button icon="pi pi-pencil" severity="secondary" rounded outlined class="mx-2" @click="openEditDialog(activity)" />
               <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2" @click="openConfirmation(activity)" />
             </div>
         </div>
@@ -22,11 +22,16 @@
             <Button label="Delete" text raised @click="deleteActivity" class="mr-4" />
         </template>
     </Dialog>
+    <Dialog header="edit activity type" class="w-full md:w-1/2 lg:w-1/3 absolute md:static top-20" v-model:visible="displayEdit" 
+         :modal="true" :draggable="false">
+            <ActivityEditCard :visible="displayEdit" :activity="activeType" @closeModal="closeEditDialog()"/>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
 import ActivityService from '@/services/ActivityService';
+import ActivityEditCard from '@/components/ActivityEditCard';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { onMounted, ref } from 'vue';
@@ -34,11 +39,21 @@ import { onMounted, ref } from 'vue';
 const activityTypes = ref('');
 const activeType = ref(null);
 const displayConfirmation = ref(false);
+const displayEdit = ref(false);
+
+const openEditDialog = (activity) => {
+  activeType.value = activity;
+  displayEdit.value = true;
+}
+
+const closeEditDialog = () => {
+  displayEdit.value = false;
+  activeType.value = null;
+}
 
 const openConfirmation = (setActiveType) => {
-  displayConfirmation.value = true;
-  console.log(setActiveType);
   activeType.value = setActiveType;
+  displayConfirmation.value = true;
 }
 
 const closeConfirmation = () => {
@@ -47,8 +62,6 @@ const closeConfirmation = () => {
 }
 
 const deleteActivity = () => {
-  console.log('activitytype to be deleted:');
-  console.log(activeType.value.id);
   ActivityService.deleteActivityType(activeType.value.id).then(
     (response) => {
       console.log(response.data);

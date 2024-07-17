@@ -42,6 +42,12 @@ class ActivityService {
         headers: authHeader() 
     });
   }
+
+  updateActivityType(id: number, activityType: ActivityType) {
+    return axios.post(API_AUTH_URL + 'activitytype/edit/' + id, activityType, { 
+        headers: authHeader() 
+    });
+  }
 }
 
 export default new ActivityService();
