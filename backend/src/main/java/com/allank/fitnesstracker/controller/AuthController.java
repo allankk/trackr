@@ -3,10 +3,10 @@ package com.allank.fitnesstracker.controller;
 import com.allank.fitnesstracker.models.Erole;
 import com.allank.fitnesstracker.models.Role;
 import com.allank.fitnesstracker.models.User;
-import com.allank.fitnesstracker.payload.request.LoginRequest;
-import com.allank.fitnesstracker.payload.request.RegisterRequest;
-import com.allank.fitnesstracker.payload.response.JwtResponse;
-import com.allank.fitnesstracker.payload.response.MessageResponse;
+import com.allank.fitnesstracker.dto.auth.LoginRequest;
+import com.allank.fitnesstracker.dto.auth.RegisterRequest;
+import com.allank.fitnesstracker.dto.auth.JwtResponse;
+import com.allank.fitnesstracker.dto.MessageDto;
 import com.allank.fitnesstracker.repository.RoleRepository;
 import com.allank.fitnesstracker.repository.UserRepository;
 import com.allank.fitnesstracker.security.jwt.JwtUtils;
@@ -49,7 +49,7 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -62,13 +62,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: email already taken"));
+        if (userRepository.existsByEmail(registerRequest.email())) {
+            return ResponseEntity.badRequest().body(new MessageDto("Error: email already taken"));
         }
 
-        User user = new User(registerRequest.getEmail(), encoder.encode(registerRequest.getPassword()));
+        User user = new User(registerRequest.email(), encoder.encode(registerRequest.password()));
 
-        Set<String> strRoles = registerRequest.getRole();
+        Set<String> strRoles = registerRequest.role();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -98,7 +98,7 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User Registered successfully"));
+        return ResponseEntity.ok(new MessageDto("User Registered successfully"));
     }
 
 
