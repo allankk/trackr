@@ -36,6 +36,12 @@ class ActivityService {
         headers: authHeader() 
     });
   }
+
+  deleteActivityType(id: number) {
+    return axios.delete(API_AUTH_URL + 'activitytype/delete/' + id, { 
+        headers: authHeader() 
+    });
+  }
 }
 
 export default new ActivityService();

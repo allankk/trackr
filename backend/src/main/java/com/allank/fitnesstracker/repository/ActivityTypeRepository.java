@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface ActivityTypeRepository extends JpaRepository<ActivityType, Long> {
     List<ActivityType> findByIsDefault(boolean isDefault);
-
-
+    List<ActivityType> findByUserId(Long userId);
 }

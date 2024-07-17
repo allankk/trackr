@@ -21,8 +21,9 @@ public class ActivityType {
             inverseJoinColumns = @JoinColumn(name = "metric_id"))
     private Set<Metric> metrics = new HashSet<>();
 
-    @OneToMany(mappedBy = "activityType", cascade = CascadeType.ALL)
-    private Set<UserActivityType> userActivityTypes = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public String getName() {
         return name;
@@ -48,12 +49,12 @@ public class ActivityType {
         this.metrics = metrics;
     }
 
-    public Set<UserActivityType> getUserActivityTypes() {
-        return userActivityTypes;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserActivityTypes(Set<UserActivityType> userActivityTypes) {
-        this.userActivityTypes = userActivityTypes;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {

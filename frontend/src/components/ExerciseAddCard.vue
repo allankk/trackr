@@ -70,7 +70,6 @@ const saveData = () => {
       console.log('success');
       console.log(response);
       emit('closeModal');
-      
     },
     (error) => {
       console.log('error' + error.toString());

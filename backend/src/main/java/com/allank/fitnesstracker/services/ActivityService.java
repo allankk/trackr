@@ -5,10 +5,13 @@ import com.allank.fitnesstracker.repository.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+
+import static com.allank.fitnesstracker.models.Erole.ROLE_USER;
 
 @Service
 public class ActivityService {
@@ -22,10 +25,10 @@ public class ActivityService {
     private MetricRepository metricRepository;
 
     @Autowired
-    private ActivityMetricRepository activityMetricRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private UserActivityTypeRepository userActivityTypeRepository;
+    private ActivityMetricRepository activityMetricRepository;
 
     @Autowired
     private ActivityGroupRepository activityGroupRepository;
@@ -33,14 +36,8 @@ public class ActivityService {
     @Autowired
     private ActivitySessionRepository activitySessionRepository;
 
-    public List<ActivityType> getAllDefaultActivityTypes() {
-        return activityTypeRepository.findByIsDefault(true);
-    }
-
     public List<ActivityType> getUserActivityTypes(Long userId) {
-        List<UserActivityType> userActivityTypes =  userActivityTypeRepository.findByUserId(userId);
-
-        return userActivityTypes.stream().map(UserActivityType::getActivityType).toList();
+        return activityTypeRepository.findByUserId(userId);
     }
 
     public void addCustomActivityTypeForUser(Long userId, String name, String description, Set<Long> metricIds) {
@@ -49,17 +46,23 @@ public class ActivityService {
         customActivityType.setName(name);
         customActivityType.setDescription(description);
         customActivityType.setDefault(false);
+        customActivityType.setUser(user);
 
         Set<Metric> metrics = new HashSet<>(metricRepository.findAllById(metricIds));
         customActivityType.setMetrics(metrics);
 
         activityTypeRepository.save(customActivityType);
+    }
 
-        UserActivityType userActivityType = new UserActivityType();
-        userActivityType.setUser(user);
-        userActivityType.setActivityType(customActivityType);
+    public void deleteUserActivityType(Long userId, Long activityTypeId) {
+        ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("activity type not found"));
 
-        userActivityTypeRepository.save(userActivityType);
+        if (activityType.getUser().getId().equals(userId)) {
+            System.out.println("deleting activitytype");
+            activityTypeRepository.delete(activityType);
+        } else {
+            throw new RuntimeException("Activity Type does not belong do the given user.");
+        }
     }
 
     public void createActivityGroupForUser(Long userId, String groupName, Set<Long> activityTypeIds ) {
@@ -96,6 +99,9 @@ public class ActivityService {
         activitySession.setMetrics(metrics);
         activitySessionRepository.save(activitySession);
     }
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @PostConstruct
     public void initDefaultActivityTypes() {
@@ -141,6 +147,25 @@ public class ActivityService {
         Metric timeH = metricRepository.findByNameAndUnit("Time", "H");
         Metric timeM = metricRepository.findByNameAndUnit("Time", "m");
 
+        if (userRepository.count() == 0) {
+            User user = new User("test@test.com",  encoder.encode("password"));
+
+            if (roleRepository.count() == 0) {
+                Role role = new Role(ROLE_USER);
+                roleRepository.save(role);
+            }
+
+            Role role = roleRepository.findByName(ROLE_USER).orElseThrow(() -> new EntityNotFoundException("role not found"));
+            Set<Role> roles = new HashSet<>();
+            roles.add(role);
+
+            user.setRoles(roles);
+
+            userRepository.save(user);
+        }
+
+        User user = userRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("user not found"));
+
         if (activityTypeRepository.count() == 0) {
             ActivityType running = new ActivityType();
             running.setName("Running");
@@ -152,6 +177,7 @@ public class ActivityService {
             runningMetrics.add(timeM);
             running.setMetrics(runningMetrics);
             running.setDefault(true);
+            running.setUser(user);
             activityTypeRepository.save(running);
 
             ActivityType cycling = new ActivityType();
@@ -164,6 +190,7 @@ public class ActivityService {
             cyclingMetrics.add(timeM);
             cycling.setMetrics(cyclingMetrics);
             cycling.setDefault(true);
+            cycling.setUser(user);
             activityTypeRepository.save(cycling);
 
             ActivityType yoga = new ActivityType();
@@ -176,6 +203,7 @@ public class ActivityService {
             yogaMetrics.add(timeM);
             yoga.setMetrics(yogaMetrics);
             yoga.setDefault(true);
+            yoga.setUser(user);
             activityTypeRepository.save(yoga);
         }
     }

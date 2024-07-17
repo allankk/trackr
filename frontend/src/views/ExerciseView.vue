@@ -9,7 +9,7 @@
          :modal="true" :draggable="false">
             <ExerciseAddCard :visible="visible" @closeModal="visible = false"/>
         </Dialog>
-        <ActivityList></ActivityList>
+        <ActivityList />    
     </div>
 </template>
 
