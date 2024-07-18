@@ -4,7 +4,8 @@ import HelloView from '../views/HelloView.vue'
 import LoginCard from '../components/LoginCard.vue'
 import RegisterCard from '../components/RegisterCard.vue'
 import ProfileView from '../views/ProfileView.vue'
-import ExerciseView from '../views/ExerciseView.vue'
+import ActivityTypeView from '../views/ActivityTypeView.vue'
+import ActivityGroupView from '../views/ActivityGroupView.vue'
 import UserBoard from '../components/UserBoard.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,9 +17,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
@@ -39,12 +37,22 @@ const routes: Array<RouteRecordRaw> = [
     component: ProfileView,
   },
   {
-    path: "/exercises",
-    component: ExerciseView,
-  },
-  {
     path: "/userboard",
     component: UserBoard
+  },
+    {
+    path: '/activity',
+    redirect: '/activity/types',
+    children: [
+      {
+        path: 'types',
+        component: ActivityTypeView
+      },
+      {
+        path: 'groups',
+        component: ActivityGroupView
+      }
+    ]
   },
 ]
 

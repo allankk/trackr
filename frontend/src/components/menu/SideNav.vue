@@ -46,8 +46,8 @@ const loggedInItems = computed(() => {
             {
                 label: 'Activities',
                 items: [
-                    { label: 'Groups', icon: 'pi pi-fw pi-users', to: '/groups' },
-                    { label: 'Exercises', icon: 'pi pi-fw pi-plus-circle', to: '/exercises' },
+                    { label: 'Groups', icon: 'pi pi-fw pi-users', to: '/activity/groups' },
+                    { label: 'Exercises', icon: 'pi pi-fw pi-plus-circle', to: '/activity/types' },
                 ]
             }
         ];

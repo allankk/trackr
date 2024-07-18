@@ -31,7 +31,7 @@
 
 <script setup>
 import ActivityService from '@/services/ActivityService';
-import ActivityEditCard from '@/components/ActivityEditCard';
+import ActivityEditCard from '@/components/activities/ActivityEditCard';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { onMounted, ref } from 'vue';
