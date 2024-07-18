@@ -11,21 +11,18 @@ interface ActivityType {
 
 class ActivityService {
   getAuthHello() {
-    console.log('getting auth hello');
     return axios.get(API_AUTH_URL + 'authhello', { 
         headers: authHeader() 
     });
   }
 
   getAllActivities() {
-    console.log('getting all activities')
     return axios.get(API_AUTH_URL + 'activitytype/all', { 
         headers: authHeader() 
     });
   }
 
   getAllMetrics() {
-    console.log('getting all metrics')
     return axios.get(API_AUTH_URL + 'metrics/all', { 
         headers: authHeader() 
     });

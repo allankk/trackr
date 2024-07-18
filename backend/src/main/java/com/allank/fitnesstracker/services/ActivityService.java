@@ -80,18 +80,6 @@ public class ActivityService {
         }
     }
 
-    public void createActivityGroupForUser(Long userId, String groupName, Set<Long> activityTypeIds ) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        ActivityGroup activityGroup = new ActivityGroup();
-        activityGroup.setUser(user);
-        activityGroup.setName(groupName);
-
-        Set<ActivityType> activityTypes = new HashSet<>(activityTypeRepository.findAllById(activityTypeIds));
-        activityGroup.setActivityTypes(activityTypes);
-        activityGroupRepository.save(activityGroup);
-    }
-
     public List<Metric> getAllMetrics() {
         return metricRepository.findAll();
     }

@@ -16,6 +16,7 @@ public class ActivityGroup {
     private User user;
 
     private String name;
+    private String description;
 
     @ManyToMany
     @JoinTable(
@@ -46,6 +47,14 @@ public class ActivityGroup {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<ActivityType> getActivityTypes() {
