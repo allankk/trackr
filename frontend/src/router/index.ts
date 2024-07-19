@@ -6,6 +6,8 @@ import RegisterCard from '../components/RegisterCard.vue'
 import ProfileView from '../views/ProfileView.vue'
 import ActivityTypeView from '../views/ActivityTypeView.vue'
 import ActivityGroupView from '../views/ActivityGroupView.vue'
+import SessionView from '../views/SessionView.vue'
+import CreateSessionView from '../views/CreateSessionView.vue'
 import UserBoard from '../components/UserBoard.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -44,6 +46,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/activity',
     redirect: '/activity/types',
     children: [
+      {
+        path: 'sessions',
+        component: SessionView,
+      },
+      {
+        path: 'sessions/create',
+        component: CreateSessionView
+      },
       {
         path: 'types',
         component: ActivityTypeView

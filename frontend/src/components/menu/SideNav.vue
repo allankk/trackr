@@ -15,6 +15,27 @@ import SideMenuItem from '@/components/menu/SideMenuItem.vue';
 
 const { currentUser, isScreenSmall } = useLayout();
 
+const dashItems = computed(() => {
+    if (currentUser.value) {
+        return [
+            { label: 'New Session', icon: 'pi pi-fw pi-plus-circle', to: '/activity/sessions/create' },
+            { label: 'Dashboard', icon: 'pi pi-fw pi-table', to: '/userboard' },
+        ];
+    }
+    return [];
+});
+
+const commonItems = [
+    {
+        label: 'Home',
+        items: [
+            { label: 'Home', icon: 'pi pi-fw pi-home', to: '/' },
+            { label: 'About', icon: 'pi pi-fw pi-question', to: '/about' },
+            { label: 'Hello', icon: 'pi pi-fw pi-bookmark', to: '/hello' },
+        ]
+    }
+];
+
 const userItems = computed(() => {
     if (currentUser.value) {
         return [
@@ -29,25 +50,15 @@ const userItems = computed(() => {
     }
 });
 
-const commonItems = [
-    {
-        label: 'Home',
-        items: [
-            { label: 'Home', icon: 'pi pi-fw pi-home', to: '/' },
-            { label: 'About', icon: 'pi pi-fw pi-question', to: '/about' },
-            { label: 'Hello', icon: 'pi pi-fw pi-bookmark', to: '/hello' },
-        ]
-    }
-];
-
 const loggedInItems = computed(() => {
     if (currentUser.value) {
         return [
             {
                 label: 'Activities',
                 items: [
+                    { label: 'Sessions', icon: 'pi pi-fw pi-stopwatch', to: '/activity/sessions' },
                     { label: 'Groups', icon: 'pi pi-fw pi-users', to: '/activity/groups' },
-                    { label: 'Exercises', icon: 'pi pi-fw pi-plus-circle', to: '/activity/types' },
+                    { label: 'Exercises', icon: 'pi pi-fw pi-wave-pulse', to: '/activity/types' },
                 ]
             }
         ];
@@ -62,7 +73,11 @@ const model = computed(() => {
         items: userItems.value
     };
 
-    return [...commonItems, ...loggedInItems.value, userModel];
+    const dashModel = {
+        items: dashItems.value
+    }
+
+    return [dashModel, ...commonItems, ...loggedInItems.value, userModel];
 });
 
 // Filter model based on screen size

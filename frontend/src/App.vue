@@ -6,7 +6,11 @@
     </div>
     <div class="layout-main-container">
       <div class="layout-main">
-        <router-view/>
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <Component :is="Component" />
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>
@@ -60,7 +64,6 @@ const isOutsideClicked = (event) => {
     }
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
-
 </script>
 
 <style>
@@ -83,5 +86,15 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease-out;
 }
 </style>
