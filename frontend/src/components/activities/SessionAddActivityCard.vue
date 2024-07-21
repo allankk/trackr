@@ -6,7 +6,7 @@
       <label for="activity" class="my-4 font-bold mx-auto">choose activities</label>
       <Listbox v-model="selectedActivities" :options="activityTypes" multiple optionLabel="name" class="w-full md:w-96 mx-auto" />
       <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
-        <Button type="submit" label="Save" class="" @click="$emit('add-activities', selectedActivities)"></Button>
+        <Button type="submit" label="Add" class="" @click="$emit('add-activities', selectedActivities)"></Button>
         <Button type="button" label="Cancel" text severity="secondary" @click="$emit('closeModal')"></Button>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <label for="activityGroup" class="my-4 font-bold mx-auto">choose activity group</label>
       <Listbox v-model="selectedActivityGroup" :options="activityGroups" optionLabel="name" class="w-full md:w-96 mx-auto" />
       <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
-        <Button type="submit" label="Save" class="" @click="$emit('add-activity-group', selectedActivityGroup)"></Button>
+        <Button type="submit" label="Add" class="" @click="$emit('add-activity-group', selectedActivityGroup)"></Button>
         <Button class="" type="button" text label="Cancel" severity="secondary" @click="$emit('closeModal')"></Button>
       </div>
     </div>

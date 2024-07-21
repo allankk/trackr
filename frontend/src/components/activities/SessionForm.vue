@@ -2,9 +2,10 @@
     <div class="max-w-4xl mx-auto">
       <form @submit.prevent="submitForm" class="mt-10">
         <div class="card mx-auto">
-          <div class="mx-auto w-full md:w-3/4 flex flex-col justify-between items-center">
+          <div class="mx-auto w-full md:w-3/4 flex flex-col justify-between items-center relative">
             <label for="calendar" class="w-full text-lg text-left mb-2">Date</label>
-            <DatePicker class="shadow-none w-full px-0 py-0" v-model="calendarValue" name="calendar" :showIcon="true" :showButtonBar="true" dateFormat="dd.mm.yy"/>
+            <DatePicker class="shadow-none w-full px-0 py-0" v-model="calendarValue" name="calendar" :showIcon="true" dateFormat="dd.mm.yy"/>
+            <span v-if="formErrors.calendarValue" class="text-red-500 text-sm text-bold absolute right-0 -bottom-6 font-bold">{{ formErrors.calendarValue }}</span>
           </div>
           <div class="mx-auto w-full md:w-3/4 flex flex-col justify-between items-center mt-4 mb-8">
             <label for="notes" class="w-full text-lg text-left mb-2">Notes</label>
@@ -12,6 +13,7 @@
           </div>
           <Divider/>
           <h5>Activities</h5>
+          <span v-if="formErrors.activities" class="text-red-500 text-sm font-bold">{{ formErrors.activities }}</span>
           <div class="my-6">
             <Button icon="pi pi-plus" class="" rounded aria-label="Add Activity" @click="openActivityModal()" />
           </div>
@@ -23,8 +25,11 @@
               />
             </div>
           </div>
-          <Button rounded>Save</Button>
-          <Dialog class="absolute h-full md:h-auto top-0 md:top-24 w-screen md:w-1/2 2xl:w-1/4" header="add activity to session" v-model:visible="activityModalVisible" :modal="true">
+          <Divider/>
+          <div class="p-fluid w-full md:w-1/2 mt-8 mx-auto">
+            <Button @click="submitForm" :disabled="isSubmitDisabled" rounded>Save</Button>
+          </div>
+          <Dialog class="absolute h-full md:h-auto top-0 md:top-24 w-screen md:w-1/2 2xl:w-1/4" header="add activity to session" v-model:visible="activityModalVisible" :modal="true" :draggable="false">
             <SessionAddActivityCard 
               :activityGroups="activityGroups"
               :activityTypes="activityTypes"
@@ -34,13 +39,12 @@
             />
           </Dialog>
         </div>
-        <button type="submit">Submit</button>
       </form>
     </div>
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import DatePicker from 'primevue/datepicker';
   import Button from 'primevue/button';
   import Divider from 'primevue/divider';
@@ -51,6 +55,7 @@
   import ActivityService from '@/services/ActivityService';
   import ActivityGroupService from '@/services/ActivityGroupService';
 
+
   const activityModalVisible = ref(false);
   
   const calendarValue = ref(new Date());
@@ -58,7 +63,11 @@
   const activityTypes = ref([]);
   const activityGroups = ref([]);
   const addedActivities = ref([]);
-  
+  const isSubmitDisabled = computed(() => addedActivities.value.length === 0);
+  const formErrors = ref({
+    calendarValue: null,
+  })
+
   onMounted(() => {
     ActivityService.getAllActivities().then(
       (response) => {
@@ -115,6 +124,16 @@
   }
   
   const submitForm = () => {
+    if (!calendarValue.value) {
+      formErrors.value.calendarValue = "Date is required";
+      return;
+    }
+
+    if (addedActivities.value.length == 0) {
+      formErrors.value.activities = "At least one activity is required";
+      return;
+    }
+
     const session = {
       date: calendarValue.value,
       notes: notes.value,
@@ -123,23 +142,10 @@
         metrics: activity.metricValues
       }))
     };
-
-    console.log('session save');
-    console.log(session);
-    //const workout = {
-    //  date: calendarValue.value,
-    //  notes: notes.value,
-    //  activities: addedActivities.value.map(activity => ({
-    //    id: activity.id,
-    //    metrics: activity.metricValues
-    //  }))
-    //};
-    //console.log('Workout:', workout);
   };
   </script>
   
   <style scoped>
-  
   .activity-card-container {
       background-color: var(--surface-ground);
   }
