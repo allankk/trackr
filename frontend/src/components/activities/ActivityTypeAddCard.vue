@@ -67,8 +67,6 @@ const saveData = () => {
 
   ActivityService.addActivityType(activityTypeData).then(
     (response) => {
-      console.log('success');
-      console.log(response);
       emit('closeModal');
     },
     (error) => {

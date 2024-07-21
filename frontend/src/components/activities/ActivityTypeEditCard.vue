@@ -29,7 +29,7 @@
         </Field>
         <div class="mt-10 mb-4 flex justify-end gap-2">
           <Button type="button" label="Cancel" severity="secondary" @click="$emit('closeModal')"></Button>
-          <Button type="submit" label="Save" class=""></Button>
+          <Button type="submit" label="Save"></Button>
         </div>
       </Form>
     </div>

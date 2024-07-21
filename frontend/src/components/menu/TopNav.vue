@@ -1,5 +1,5 @@
 <template>
-  <nav class="py-4 border-b sticky top-0 border-slate-400 layout-topbar-menu h-14">
+  <nav class="py-4 border-b sticky top-0 border-slate-400 layout-topbar-menu h-14 z-20 bg-white">
     <a href="/">
       <img alt="FitnessTrack logo" class="max-h-10 absolute top-2" src="@/assets/fitnesstrack-logo.png">
     </a>

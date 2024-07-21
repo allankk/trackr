@@ -11,7 +11,6 @@
     .layout-wrapper {
         .layout-main-container {
             margin-left: 300px;
-            margin-right: 300px;
         }
 
         &.layout-static-inactive {
@@ -32,6 +31,14 @@
     }
 }
 
+@media (min-width: 1280px) {
+    .layout-wrapper {
+        .layout-main-container {
+            margin-right: 300px;
+        }
+    }
+}
+
 @media (max-width: 1024px) {
     .blocked-scroll {
         overflow: hidden;
@@ -40,8 +47,8 @@
     .layout-wrapper {
         .layout-main-container {
             margin-left: 0;
-            padding-left: 2rem;
-            padding-right: 2rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
 
         .layout-sidebar {

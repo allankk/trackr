@@ -1,35 +1,38 @@
 <template>
-    <div>
-      <h1>Add Workout</h1>
-      <form @submit.prevent="submitForm">
-        <div>
-          <label for="date">Date:</label>
-          <Calendar v-model="date" :default-date="new Date()" />
-        </div>
-        <div>
-          <label for="notes">Notes:</label>
-          <textarea v-model="notes" id="notes"></textarea>
-        </div>
-        <div>
-          <label for="activityGroup">Activity Group:</label>
-          <select v-model="selectedActivityGroup">
-            <option v-for="group in activityGroups" :key="group.id" :value="group.id">{{ group.name }}</option>
-          </select>
-          <button type="button" @click="addActivityGroup">Add Group</button>
-        </div>
-        <div>
-          <label for="activity">Activity:</label>
-          <select v-model="selectedActivity">
-            <option v-for="activity in activityTypes" :key="activity.id" :value="activity.id">{{ activity.name }}</option>
-          </select>
-          <button type="button" @click="addActivity">Add Activity</button>
-        </div>
-        <div v-for="(activity, index) in selectedActivities" :key="index">
-          <h3>{{ activity.name }}</h3>
-          <div v-for="metric in activity.metrics" :key="metric.id">
-            <label :for="'metric-' + metric.id">{{ metric.name }} ({{ metric.unit }}):</label>
-            <input :id="'metric-' + metric.id" v-model="activity.metricValues[metric.id]" />
+    <div class="max-w-4xl mx-auto">
+      <form @submit.prevent="submitForm" class="mt-10">
+        <div class="card mx-auto">
+          <div class="mx-auto w-full md:w-3/4 flex flex-col justify-between items-center">
+            <label for="calendar" class="w-full text-lg text-left mb-2">Date</label>
+            <DatePicker class="shadow-none w-full px-0 py-0" v-model="calendarValue" name="calendar" :showIcon="true" :showButtonBar="true" dateFormat="dd.mm.yy"/>
           </div>
+          <div class="mx-auto w-full md:w-3/4 flex flex-col justify-between items-center mt-4 mb-8">
+            <label for="notes" class="w-full text-lg text-left mb-2">Notes</label>
+            <Textarea class="w-full py-2" placeholder="Notes" :autoResize="true" rows="3" cols="30" />
+          </div>
+          <Divider/>
+          <h5>Activities</h5>
+          <div class="my-6">
+            <Button icon="pi pi-plus" class="" rounded aria-label="Add Activity" @click="openActivityModal()" />
+          </div>
+          <div v-if="addedActivities.length" class="activity-card-container p-2">
+            <div v-for="(activity, index) in addedActivities" :key="index" class="p-2">
+              <SessionActivityCard 
+                :activity="activity" 
+                @remove-activity="handleRemoveActivity"
+              />
+            </div>
+          </div>
+          <Button rounded>Save</Button>
+          <Dialog class="absolute h-full md:h-auto top-0 md:top-24 w-screen md:w-1/2 2xl:w-1/4" header="add activity to session" v-model:visible="activityModalVisible" :modal="true">
+            <SessionAddActivityCard 
+              :activityGroups="activityGroups"
+              :activityTypes="activityTypes"
+              @closeModal="closeActivityModal"
+              @add-activity-group="handleAddActivityGroup"
+              @add-activities="handleAddActivities"
+            />
+          </Dialog>
         </div>
         <button type="submit">Submit</button>
       </form>
@@ -38,17 +41,23 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import Calendar from 'primevue/calendar';
+  import DatePicker from 'primevue/datepicker';
+  import Button from 'primevue/button';
+  import Divider from 'primevue/divider';
+  import Textarea from 'primevue/textarea';
+  import Dialog from 'primevue/dialog';
+  import SessionAddActivityCard from '@/components/activities/SessionAddActivityCard.vue';
+  import SessionActivityCard from '@/components/activities/SessionActivityCard.vue';
   import ActivityService from '@/services/ActivityService';
   import ActivityGroupService from '@/services/ActivityGroupService';
+
+  const activityModalVisible = ref(false);
   
-  const date = ref(new Date());
+  const calendarValue = ref(new Date());
   const notes = ref('');
   const activityTypes = ref([]);
   const activityGroups = ref([]);
-  const selectedActivityGroup = ref(null);
-  const selectedActivity = ref(null);
-  const selectedActivities = ref([]);
+  const addedActivities = ref([]);
   
   onMounted(() => {
     ActivityService.getAllActivities().then(
@@ -69,41 +78,70 @@
       }
     );
   });
-  
-  const addActivityGroup = () => {
-    const group = activityGroups.value.find(g => g.id === selectedActivityGroup.value);
-    if (group) {
-      group.activityTypes.forEach(activity => {
-        const existingActivity = selectedActivities.value.find(a => a.id === activity.id);
-        if (!existingActivity) {
-          selectedActivities.value.push({ ...activity, metricValues: {} });
-        }
-      });
-    }
+
+  const openActivityModal = () => {
+    activityModalVisible.value = true;
+  }
+
+  const closeActivityModal = () => {
+    activityModalVisible.value = false;
+  }
+
+  const handleAddActivityGroup = (selectedActivityGroups) => {
+    selectedActivityGroups.activityTypes.forEach((activity) => {
+      const existingActivity = addedActivities.value.find(x => x.id === activity.id);
+
+      if (!existingActivity) {
+        addedActivities.value.push({ ...activity, metricValues: {} })
+      }
+    });
+
+    closeActivityModal();
   };
-  
-  const addActivity = () => {
-    const activity = activityTypes.value.find(a => a.id === selectedActivity.value);
-    if (activity && !selectedActivities.value.find(a => a.id === activity.id)) {
-      selectedActivities.value.push({ ...activity, metricValues: {} });
-    }
+
+  const handleAddActivities = (selectedActivities) => {
+    selectedActivities.forEach(activity => {
+      const existingActivity = addedActivities.value.find(x => x.id === activity.id);
+
+      if (!existingActivity) {
+        addedActivities.value.push({ ...activity, metricValues: {} })
+      }
+    })
+    closeActivityModal();
   };
+
+  const handleRemoveActivity = (activity) => {
+    addedActivities.value = addedActivities.value.filter(x => x.id !== activity.id);
+  }
   
   const submitForm = () => {
-    const workout = {
-      date: date.value,
+    const session = {
+      date: calendarValue.value,
       notes: notes.value,
-      activities: selectedActivities.value.map(activity => ({
+      activities: addedActivities.value.map(activity => ({
         id: activity.id,
         metrics: activity.metricValues
       }))
     };
-    console.log('Workout:', workout);
-    // Send workout data to the server...
+
+    console.log('session save');
+    console.log(session);
+    //const workout = {
+    //  date: calendarValue.value,
+    //  notes: notes.value,
+    //  activities: addedActivities.value.map(activity => ({
+    //    id: activity.id,
+    //    metrics: activity.metricValues
+    //  }))
+    //};
+    //console.log('Workout:', workout);
   };
   </script>
   
   <style scoped>
-  /* Add your styles here */
+  
+  .activity-card-container {
+      background-color: var(--surface-ground);
+  }
   </style>
   
