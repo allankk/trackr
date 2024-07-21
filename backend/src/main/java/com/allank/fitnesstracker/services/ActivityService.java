@@ -4,6 +4,7 @@ import com.allank.fitnesstracker.models.*;
 import com.allank.fitnesstracker.repository.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ActivityService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private ActivityMetricRepository activityMetricRepository;
+    private UnitRepository unitRepository;
 
     @Autowired
     private ActivityGroupRepository activityGroupRepository;
@@ -84,7 +85,7 @@ public class ActivityService {
         return metricRepository.findAll();
     }
 
-    public void saveActivitySession(Long userId, Long activityTypeId, LocalDate date, Map<Long, String> metricValues) {
+    public void saveActivitySession(Long userId, Long activityTypeId, LocalDate date, Map<Long, Double> metricValues) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("Activity type not found"));
 
@@ -93,8 +94,8 @@ public class ActivityService {
         activitySession.setActivityType(activityType);
         activitySession.setDate(date);
 
-        Map<Metric, String> metrics = new HashMap<>();
-        for (Map.Entry<Long, String> entry : metricValues.entrySet()) {
+        Map<Metric, Double> metrics = new HashMap<>();
+        for (Map.Entry<Long, Double> entry : metricValues.entrySet()) {
             Metric metric = metricRepository.findById(entry.getKey()).orElseThrow(() -> new IllegalArgumentException("Metric not found"));
             metrics.put(metric, entry.getValue());
         }
@@ -107,48 +108,78 @@ public class ActivityService {
     PasswordEncoder encoder;
 
     @PostConstruct
-    public void initDefaultActivityTypes() {
+    public void initDefaultActivityTypes()
+    {
         if (metricRepository.count() == 0) {
-            Metric distKm = new Metric();
-            distKm.setName("Distance");
-            distKm.setUnit("km");
-            metricRepository.save(distKm);
+            Metric distMetric = new Metric();
+            distMetric.setName("Distance");
+            distMetric.setStandardUnit("m");
 
-            Metric distM = new Metric();
-            distM.setName("Distance");
-            distM.setUnit("m");
-            metricRepository.save(distM);
+            Unit kilometer = new Unit();
+            kilometer.setUnit("km");
+            kilometer.setName("kilometer");
+            kilometer.setConversionFactor(1000);
+            distMetric.addUnit(kilometer);
 
-            Metric timeH = new Metric();
-            timeH.setName("Time");
-            timeH.setUnit("h");
-            metricRepository.save(timeH);
+            Unit meter = new Unit();
+            meter.setUnit("m");
+            meter.setName("meter");
+            meter.setName("meter");
+            meter.setConversionFactor(1);
+            distMetric.addUnit(meter);
 
-            Metric timeM = new Metric();
-            timeM.setName("Time");
-            timeM.setUnit("m");
-            metricRepository.save(timeM);
+            metricRepository.save(distMetric);
 
-            Metric timeS = new Metric();
-            timeS.setName("Time");
-            timeS.setUnit("s");
-            metricRepository.save(timeS);
+            Metric timeMetric = new Metric();
+            timeMetric.setName("Time");
+            timeMetric.setStandardUnit("s");
 
-            Metric sets = new Metric();
-            sets.setName("Sets");
-            sets.setUnit("Sets");
-            metricRepository.save(sets);
+            Unit seconds = new Unit();
+            seconds.setUnit("s");
+            seconds.setName("second");
+            seconds.setConversionFactor(1);
+            timeMetric.addUnit(seconds);
 
-            Metric reps = new Metric();
-            reps.setName("Reps");
-            reps.setUnit("Reps");
-            metricRepository.save(reps);
+            Unit minutes = new Unit();
+            minutes.setUnit("min");
+            minutes.setName("minute");
+            minutes.setConversionFactor(60);
+            timeMetric.addUnit(minutes);
+
+            Unit hours = new Unit();
+            hours.setUnit("h");
+            hours.setName("hour");
+            hours.setConversionFactor(3600);
+            timeMetric.addUnit(hours);
+
+            metricRepository.save(timeMetric);
+
+            Metric setMetric = new Metric();
+            setMetric.setName("Sets");
+            setMetric.setStandardUnit("sets");
+
+            Unit sets = new Unit();
+            sets.setUnit("set");
+            sets.setName("set");
+            sets.setConversionFactor(1);
+            setMetric.addUnit(sets);
+
+            metricRepository.save(setMetric);
+
+            Metric repMetric = new Metric();
+            repMetric.setName("Reps");
+            repMetric.setStandardUnit("reps");
+            Unit reps = new Unit();
+            reps.setUnit("rep");
+            reps.setName("rep");
+            reps.setConversionFactor(1);
+            repMetric.addUnit(reps);
+
+            metricRepository.save(repMetric);
         }
 
-        Metric distKm = metricRepository.findByNameAndUnit("Distance", "km");
-        Metric distM = metricRepository.findByNameAndUnit("Distance", "m");
-        Metric timeH = metricRepository.findByNameAndUnit("Time", "H");
-        Metric timeM = metricRepository.findByNameAndUnit("Time", "m");
+        Metric distMetric = metricRepository.findByName("Distance");
+        Metric timeMetric = metricRepository.findByName("Time");
 
         if (userRepository.count() == 0) {
             User user = new User("test@test.com",  encoder.encode("password"));
@@ -174,10 +205,8 @@ public class ActivityService {
             running.setName("Running");
             running.setDescription("Running");
             Set<Metric> runningMetrics = new HashSet<>();
-            runningMetrics.add(distKm);
-            runningMetrics.add(distM);
-            runningMetrics.add(timeH);
-            runningMetrics.add(timeM);
+            runningMetrics.add(distMetric);
+            runningMetrics.add(timeMetric);
             running.setMetrics(runningMetrics);
             running.setDefault(true);
             running.setUser(user);
@@ -187,10 +216,8 @@ public class ActivityService {
             cycling.setName("Cycling");
             cycling.setDescription("Cycling");
             Set<Metric> cyclingMetrics = new HashSet<>();
-            cyclingMetrics.add(distKm);
-            cyclingMetrics.add(distM);
-            cyclingMetrics.add(timeH);
-            cyclingMetrics.add(timeM);
+            cyclingMetrics.add(distMetric);
+            cyclingMetrics.add(timeMetric);
             cycling.setMetrics(cyclingMetrics);
             cycling.setDefault(true);
             cycling.setUser(user);
@@ -200,10 +227,7 @@ public class ActivityService {
             yoga.setName("Yoga");
             yoga.setDescription("Yoga");
             Set<Metric> yogaMetrics = new HashSet<>();
-            yogaMetrics.add(distKm);
-            yogaMetrics.add(distM);
-            yogaMetrics.add(timeH);
-            yogaMetrics.add(timeM);
+            yogaMetrics.add(timeMetric);
             yoga.setMetrics(yogaMetrics);
             yoga.setDefault(true);
             yoga.setUser(user);

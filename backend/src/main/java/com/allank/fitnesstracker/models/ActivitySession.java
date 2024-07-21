@@ -22,19 +22,27 @@ public class ActivitySession {
     @JoinColumn(name = "activity_type_id")
     private ActivityType activityType;
 
+    private String notes;
+
     @ElementCollection
     @CollectionTable(name = "activity_session_metrics", joinColumns = @JoinColumn(name = "activity_session_id"))
     @MapKeyJoinColumn(name = "metric_id")
     @Column(name = "value")
-    private Map<Metric, String> metrics = new HashMap<>();
+    private Map<Metric, Double> metrics = new HashMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "activity_session_units", joinColumns = @JoinColumn(name = "activity_session_id"))
+    @MapKeyJoinColumn(name = "metric_id")
+    @Column(name = "user_unit")
+    private Map<Metric, String> userUnits = new HashMap<>();
 
     private LocalDate date;
 
-    public Map<Metric, String> getMetrics() {
+    public Map<Metric, Double> getMetrics() {
         return metrics;
     }
 
-    public void setMetrics(Map<Metric, String> metrics) {
+    public void setMetrics(Map<Metric, Double> metrics) {
         this.metrics = metrics;
     }
 
@@ -70,4 +78,19 @@ public class ActivitySession {
         this.id = id;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Map<Metric, String> getUserUnits() {
+        return userUnits;
+    }
+
+    public void setUserUnits(Map<Metric, String> userUnits) {
+        this.userUnits = userUnits;
+    }
 }

@@ -1,7 +1,9 @@
 package com.allank.fitnesstracker.controller;
 
 import com.allank.fitnesstracker.dto.MetricDto;
+import com.allank.fitnesstracker.dto.UnitDto;
 import com.allank.fitnesstracker.models.Metric;
+import com.allank.fitnesstracker.models.Unit;
 import com.allank.fitnesstracker.services.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,15 @@ public class MetricsController {
                 .map(item -> new MetricDto(
                         item.getId(),
                         item.getName(),
-                        item.getUnit()
+                        item.getStandardUnit(),
+                        item.getUnits().stream()
+                                .map(unit -> new UnitDto(
+                                        unit.getId(),
+                                        unit.getName(),
+                                        unit.getUnit(),
+                                        unit.getConversionFactor()
+                                ))
+                                .toList()
                 ))
                 .toList();
 
