@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRaw } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import Button from 'primevue/button';
@@ -57,12 +57,12 @@ const schema = yup.object().shape({
 });
 
 const saveData = () => {
-  const rawMetrics = toRaw(metrics.value).map(item => toRaw(item));
+  //const rawMetrics = toRaw(metrics.value).map(item => toRaw(item));
 
   const activityTypeData = {
     name: name.value,
     description: description.value,
-    metrics: rawMetrics.map(item => item.code)
+    metrics: metrics.value.map(item => item.code)
   }
 
   ActivityService.addActivityType(activityTypeData).then(
@@ -80,7 +80,7 @@ onMounted(() => {
       (response) => {
         response.data.forEach(item => {
           dropdownItems.value.push({
-            name: item.name + ' (' + item.unit + ')',
+            name: item.name,
             code: item.id
           })
         })

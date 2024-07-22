@@ -1,11 +1,10 @@
 package com.allank.fitnesstracker.services;
 
-import com.allank.fitnesstracker.dto.ActivityGroupDto;
-import com.allank.fitnesstracker.dto.ActivityGroupResponseDto;
+import com.allank.fitnesstracker.dto.response.ActivityGroupResponseDto;
 import com.allank.fitnesstracker.dto.ActivityTypeDto;
+import com.allank.fitnesstracker.mapper.ActivityTypeRequestMapper;
 import com.allank.fitnesstracker.models.ActivityGroup;
 import com.allank.fitnesstracker.models.ActivityType;
-import com.allank.fitnesstracker.models.Metric;
 import com.allank.fitnesstracker.models.User;
 import com.allank.fitnesstracker.repository.ActivityGroupRepository;
 import com.allank.fitnesstracker.repository.ActivityTypeRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,6 +27,9 @@ public class ActivityGroupService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ActivityTypeRequestMapper activityTypeMapper;
 
     public List<ActivityGroup> getUserActivityGroups(Long userId) {
         return activityGroupRepository.findByUserId(userId);
@@ -81,16 +82,9 @@ public class ActivityGroupService {
 
     private ActivityGroupResponseDto getGroupDto(ActivityGroup activityGroup) {
         List<ActivityTypeDto> activityTypeList = activityGroup.getActivityTypes().stream()
-                .map(activityType -> new ActivityTypeDto(
-                        activityType.getId(),
-                        activityType.getName(),
-                        activityType.getDescription(),
-                        activityType.getMetrics(),
-                        activityType.isDefault()
-                ))
-                .collect(Collectors.toList());
+                .map(activityTypeMapper::toDto)
+                .toList();
 
-        // Create and return ActivityGroupDto
         return new ActivityGroupResponseDto(
                 activityGroup.getId(),
                 activityGroup.getName(),

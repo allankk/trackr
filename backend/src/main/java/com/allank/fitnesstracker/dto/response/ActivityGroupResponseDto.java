@@ -1,7 +1,8 @@
-package com.allank.fitnesstracker.dto;
+package com.allank.fitnesstracker.dto.response;
+
+import com.allank.fitnesstracker.dto.ActivityTypeDto;
 
 import java.util.List;
-import java.util.Map;
 
 public record ActivityGroupResponseDto(
         Long id,

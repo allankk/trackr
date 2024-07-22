@@ -2,6 +2,7 @@ package com.allank.fitnesstracker.controller;
 
 import com.allank.fitnesstracker.dto.ActivityTypeDto;
 import com.allank.fitnesstracker.dto.UserActivityTypeDto;
+import com.allank.fitnesstracker.mapper.ActivityTypeRequestMapper;
 import com.allank.fitnesstracker.models.ActivityType;
 import com.allank.fitnesstracker.security.services.UserDetailsImpl;
 import com.allank.fitnesstracker.services.ActivityService;
@@ -12,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,6 +23,9 @@ public class ActivityTypeController {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    ActivityTypeRequestMapper activityTypeMapper;
+
     @ResponseBody
     @GetMapping(path = "/all")
     public ResponseEntity<Object> getAllActivities() {
@@ -32,13 +35,7 @@ public class ActivityTypeController {
         List<ActivityType> userActivities = activityService.getUserActivityTypes(userId);
 
         List<ActivityTypeDto> response = userActivities.stream()
-                .map(item -> new ActivityTypeDto(
-                        item.getId(),
-                        item.getName(),
-                        item.getDescription(),
-                        item.getMetrics(),
-                        item.isDefault()
-                ))
+                .map(activityTypeMapper::toDto)
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

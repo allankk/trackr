@@ -4,7 +4,7 @@ import com.allank.fitnesstracker.models.*;
 import com.allank.fitnesstracker.repository.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.misc.Array2DHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class ActivityService {
         customActivityType.setDefault(false);
         customActivityType.setUser(user);
 
-        Set<Metric> metrics = new HashSet<>(metricRepository.findAllById(metricIds));
+        List<Metric> metrics = new ArrayList<>(metricRepository.findAllById(metricIds));
         customActivityType.setMetrics(metrics);
 
         activityTypeRepository.save(customActivityType);
@@ -64,7 +64,7 @@ public class ActivityService {
 
         activityType.setName(name);
         activityType.setDescription(description);
-        Set<Metric> metrics = new HashSet<>(metricRepository.findAllById(metricIds));
+        List<Metric> metrics = new ArrayList<>(metricRepository.findAllById(metricIds));
         activityType.setMetrics(metrics);
 
         activityTypeRepository.save(activityType);
@@ -83,25 +83,6 @@ public class ActivityService {
 
     public List<Metric> getAllMetrics() {
         return metricRepository.findAll();
-    }
-
-    public void saveActivitySession(Long userId, Long activityTypeId, LocalDate date, Map<Long, Double> metricValues) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("Activity type not found"));
-
-        ActivitySession activitySession = new ActivitySession();
-        activitySession.setUser(user);
-        activitySession.setActivityType(activityType);
-        activitySession.setDate(date);
-
-        Map<Metric, Double> metrics = new HashMap<>();
-        for (Map.Entry<Long, Double> entry : metricValues.entrySet()) {
-            Metric metric = metricRepository.findById(entry.getKey()).orElseThrow(() -> new IllegalArgumentException("Metric not found"));
-            metrics.put(metric, entry.getValue());
-        }
-
-        activitySession.setMetrics(metrics);
-        activitySessionRepository.save(activitySession);
     }
 
     @Autowired
@@ -204,7 +185,7 @@ public class ActivityService {
             ActivityType running = new ActivityType();
             running.setName("Running");
             running.setDescription("Running");
-            Set<Metric> runningMetrics = new HashSet<>();
+            List<Metric> runningMetrics = new ArrayList<>();
             runningMetrics.add(distMetric);
             runningMetrics.add(timeMetric);
             running.setMetrics(runningMetrics);
@@ -215,7 +196,7 @@ public class ActivityService {
             ActivityType cycling = new ActivityType();
             cycling.setName("Cycling");
             cycling.setDescription("Cycling");
-            Set<Metric> cyclingMetrics = new HashSet<>();
+            List<Metric> cyclingMetrics = new ArrayList<>();
             cyclingMetrics.add(distMetric);
             cyclingMetrics.add(timeMetric);
             cycling.setMetrics(cyclingMetrics);
@@ -226,7 +207,7 @@ public class ActivityService {
             ActivityType yoga = new ActivityType();
             yoga.setName("Yoga");
             yoga.setDescription("Yoga");
-            Set<Metric> yogaMetrics = new HashSet<>();
+            List<Metric> yogaMetrics = new ArrayList<>();
             yogaMetrics.add(timeMetric);
             yoga.setMetrics(yogaMetrics);
             yoga.setDefault(true);

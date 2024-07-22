@@ -55,7 +55,7 @@ const description = ref(props.activity.description);
 
 metrics.value = props.activity.metrics.map(item => {
   return {
-    name: item.name + ' (' + item.unit + ')',
+    name: item.name,
     code: item.id
   }
 });
@@ -104,7 +104,7 @@ onMounted(() => {
       (response) => {
         response.data.forEach(item => {
           dropdownItems.value.push({
-            name: item.name + ' (' + item.unit + ')',
+            name: item.name,
             code: item.id
           })
         })

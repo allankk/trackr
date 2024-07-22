@@ -2,7 +2,9 @@ package com.allank.fitnesstracker.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,11 +21,14 @@ public class ActivityType {
             name = "activity_type_metrics",
             joinColumns = @JoinColumn(name = "activity_type_id"),
             inverseJoinColumns = @JoinColumn(name = "metric_id"))
-    private Set<Metric> metrics = new HashSet<>();
+    private List<Metric> metrics = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany(mappedBy = "activityTypes")
+    private List<ActivitySession> activitySessions = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -41,11 +46,11 @@ public class ActivityType {
         this.description = description;
     }
 
-    public Set<Metric> getMetrics() {
+    public List<Metric> getMetrics() {
         return metrics;
     }
 
-    public void setMetrics(Set<Metric> metrics) {
+    public void setMetrics(List<Metric> metrics) {
         this.metrics = metrics;
     }
 
@@ -71,5 +76,13 @@ public class ActivityType {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public List<ActivitySession> getActivitySessions() {
+        return activitySessions;
+    }
+
+    public void setActivitySessions(List<ActivitySession> activitySessions) {
+        this.activitySessions = activitySessions;
     }
 }

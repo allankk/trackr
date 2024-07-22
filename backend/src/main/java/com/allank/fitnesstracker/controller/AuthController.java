@@ -6,7 +6,7 @@ import com.allank.fitnesstracker.models.User;
 import com.allank.fitnesstracker.dto.auth.LoginRequest;
 import com.allank.fitnesstracker.dto.auth.RegisterRequest;
 import com.allank.fitnesstracker.dto.auth.JwtResponse;
-import com.allank.fitnesstracker.dto.MessageDto;
+import com.allank.fitnesstracker.dto.response.MessageDto;
 import com.allank.fitnesstracker.repository.RoleRepository;
 import com.allank.fitnesstracker.repository.UserRepository;
 import com.allank.fitnesstracker.security.jwt.JwtUtils;

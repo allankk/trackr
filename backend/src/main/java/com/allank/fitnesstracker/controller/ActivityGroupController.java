@@ -1,10 +1,11 @@
 package com.allank.fitnesstracker.controller;
 
 import com.allank.fitnesstracker.dto.*;
+import com.allank.fitnesstracker.dto.response.ActivityGroupResponseDto;
+import com.allank.fitnesstracker.dto.response.MessageDto;
 import com.allank.fitnesstracker.models.ActivityGroup;
 import com.allank.fitnesstracker.security.services.UserDetailsImpl;
 import com.allank.fitnesstracker.services.ActivityGroupService;
-import com.allank.fitnesstracker.services.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)

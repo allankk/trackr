@@ -2,11 +2,8 @@ package com.allank.fitnesstracker.models;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 
 @Entity
 public class ActivitySession {
@@ -18,48 +15,26 @@ public class ActivitySession {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_type_id")
-    private ActivityType activityType;
+    @ManyToMany
+    @JoinTable(
+            name = "activity_session_activity_types",
+            joinColumns = @JoinColumn(name = "activity_session_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_type_id"))
+    private List<ActivityType> activityTypes = new ArrayList<>();
 
     private String notes;
 
-    @ElementCollection
-    @CollectionTable(name = "activity_session_metrics", joinColumns = @JoinColumn(name = "activity_session_id"))
-    @MapKeyJoinColumn(name = "metric_id")
-    @Column(name = "value")
-    private Map<Metric, Double> metrics = new HashMap<>();
+    @OneToMany(mappedBy = "activitySession", cascade = CascadeType.ALL)
+    private List<ActivitySessionMetric> activitySessionMetrics = new ArrayList<>();
 
-    @ElementCollection
-    @CollectionTable(name = "activity_session_units", joinColumns = @JoinColumn(name = "activity_session_id"))
-    @MapKeyJoinColumn(name = "metric_id")
-    @Column(name = "user_unit")
-    private Map<Metric, String> userUnits = new HashMap<>();
+    private Instant date;
 
-    private LocalDate date;
-
-    public Map<Metric, Double> getMetrics() {
-        return metrics;
-    }
-
-    public void setMetrics(Map<Metric, Double> metrics) {
-        this.metrics = metrics;
-    }
-
-    public LocalDate getDate() {
+    public Instant getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Instant date) {
         this.date = date;
-    }
-
-    public ActivityType getActivityType() {
-        return activityType;
-    }
-
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
     }
 
     public User getUser() {
@@ -86,11 +61,19 @@ public class ActivitySession {
         this.notes = notes;
     }
 
-    public Map<Metric, String> getUserUnits() {
-        return userUnits;
+    public List<ActivityType> getActivityTypes() {
+        return activityTypes;
     }
 
-    public void setUserUnits(Map<Metric, String> userUnits) {
-        this.userUnits = userUnits;
+    public void setActivityTypes(List<ActivityType> activityTypes) {
+        this.activityTypes = activityTypes;
+    }
+
+    public List<ActivitySessionMetric> getActivitySessionMetrics() {
+        return activitySessionMetrics;
+    }
+
+    public void setActivitySessionMetrics(List<ActivitySessionMetric> activitySessionMetrics) {
+        this.activitySessionMetrics = activitySessionMetrics;
     }
 }
