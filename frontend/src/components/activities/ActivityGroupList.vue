@@ -48,6 +48,7 @@ const openEditDialog = (activityGroup) => {
 const closeEditDialog = () => {
   displayEdit.value = false;
   activeGroup.value = null;
+  getAllActivityGroups();
 }
 
 const openConfirmation = (setActiveGroup) => {
@@ -62,8 +63,8 @@ const closeConfirmation = () => {
 
 const deleteActivityGroup = () => {
   ActivityGroupService.deleteActivityGroup(activeGroup.value.id).then(
-    (response) => {
-      console.log(response.data);
+    (success) => {
+      getAllActivityGroups();
     },
     (error) => {
       console.log('error');
@@ -76,7 +77,11 @@ const deleteActivityGroup = () => {
 }
 
 onMounted(() => {
-      ActivityGroupService.getAllActivityGroups().then(
+  getAllActivityGroups();
+});
+
+const getAllActivityGroups = () => {
+  ActivityGroupService.getAllActivityGroups().then(
       (response) => {
         console.log(response.data);
         activityGroups.value = response.data;
@@ -86,7 +91,7 @@ onMounted(() => {
         console.log(error.toString());
       }
     )
-});
+}
 </script>
 
 <style scoped>

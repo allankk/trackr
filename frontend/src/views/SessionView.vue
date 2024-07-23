@@ -8,29 +8,15 @@
             </Button>
         </router-link>
         <router-view></router-view>
-        <ActivityList />    
+        <SessionList />    
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import Button from 'primevue/button';
-import ActivityList from '@/components/activities/ActivityList.vue';
-import ActivitySessionService from '@/services/ActivitySessionService';
+import SessionList from '@/components/activities/SessionList.vue';
 
 const visible = ref(false);
-
-onMounted(() => {
-    console.log('getting all sessions')
-    ActivitySessionService.getAllSessions().then(
-    (response) => {
-      console.log('response');
-      console.log(response);
-    },
-    (error) => {
-      console.log(error);
-    }
-  )
-});
 
 </script>

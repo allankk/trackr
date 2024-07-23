@@ -88,8 +88,6 @@ const updateData = () => {
 
   ActivityGroupService.updateActivityGroup(props.activityGroup.id, activityGroupData).then(
     (response) => {
-      console.log('success');
-      console.log(response);
       emit('closeModal');
     },
     (error) => {

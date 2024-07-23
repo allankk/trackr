@@ -64,14 +64,24 @@ const { activity } = toRefs(props);
 const displayConfirmation = ref(false);
 
 activity.value.metrics.forEach(metric => {
+  if (metric.selectedUnit && metric.selectedUnit.id) {
+    metric.selectedUnit = metric.units.find(unit => unit.id === metric.selectedUnit.id) || metric.units[0];
+  } else {
+    metric.selectedUnit = metric.units[0]; 
+  }
+
+  if (!metric.selectedUnit) {
+    metric.selectedUnit = metric.units[0];
+  }
+
   if (metric.value == undefined) {
     metric.value = null;
   }
-  metric.selectedUnit = metric.units[0]; // Default to the first unit
 });
 
 const openConfirmation = () => {
   displayConfirmation.value = true;
+
 }
 
 const closeConfirmation = () => {

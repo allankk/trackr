@@ -7,9 +7,9 @@
         </Button>
         <Dialog header="add activity group" class="w-full md:w-1/2 lg:w-1/3 absolute md:static top-20" v-model:visible="visible" 
          :modal="true" :draggable="false">
-            <ActivityGroupAddCard :visible="visible" @closeModal="visible = false"/>
+            <ActivityGroupAddCard :visible="visible" @closeModal="closedModal"/>
         </Dialog>
-        <ActivityGroupList />    
+        <ActivityGroupList :key="groupListKey" />    
     </div>
 </template>
 
@@ -21,5 +21,11 @@ import ActivityGroupAddCard from '@/components/activities/ActivityGroupAddCard.v
 import ActivityGroupList from '@/components/activities/ActivityGroupList.vue';
 
 const visible = ref(false);
+const groupListKey = ref(0);
 
+const closedModal = () => {
+    visible.value = false;
+    // rerender after add modal closed
+    groupListKey.value += 1;
+}
 </script>

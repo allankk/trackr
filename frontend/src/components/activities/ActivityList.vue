@@ -49,6 +49,7 @@ const openEditDialog = (activity) => {
 const closeEditDialog = () => {
   displayEdit.value = false;
   activeType.value = null;
+  getAllActivities();
 }
 
 const openConfirmation = (setActiveType) => {
@@ -65,6 +66,7 @@ const deleteActivity = () => {
   ActivityService.deleteActivityType(activeType.value.id).then(
     (response) => {
       console.log(response.data);
+      getAllActivities();
     },
     (error) => {
       console.log('error');
@@ -77,9 +79,12 @@ const deleteActivity = () => {
 }
 
 onMounted(() => {
-      ActivityService.getAllActivities().then(
+  getAllActivities();
+});
+
+const getAllActivities = () => {
+  ActivityService.getAllActivities().then(
       (response) => {
-        console.log(response.data);
         activityTypes.value = response.data;
       },
       (error) => {
@@ -87,7 +92,7 @@ onMounted(() => {
         console.log(error.toString());
       }
     )
-});
+}
 </script>
 
 <style scoped>

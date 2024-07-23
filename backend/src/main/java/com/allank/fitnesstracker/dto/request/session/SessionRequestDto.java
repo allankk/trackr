@@ -6,7 +6,6 @@ import java.util.List;
 public record SessionRequestDto(
         Instant date,
         String notes,
-        List<SessionActivityRequestDto> activities,
-        Long id
+        List<SessionActivityRequestDto> activities
 ) {
 }

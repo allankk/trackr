@@ -4,6 +4,7 @@ import com.allank.fitnesstracker.models.*;
 import com.allank.fitnesstracker.repository.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.antlr.v4.runtime.misc.Array2DHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,9 @@ public class ActivityService {
 
     @Autowired
     private ActivitySessionRepository activitySessionRepository;
+
+    @Autowired
+    private ActivitySessionMetricRepository activitySessionMetricRepository;
 
     public List<ActivityType> getUserActivityTypes(Long userId) {
         return activityTypeRepository.findByUserId(userId);
@@ -70,11 +74,30 @@ public class ActivityService {
         activityTypeRepository.save(activityType);
     }
 
+    @Transactional
     public void deleteUserActivityType(Long userId, Long activityTypeId) {
         ActivityType activityType = activityTypeRepository.findById(activityTypeId).orElseThrow(() -> new IllegalArgumentException("activity type not found"));
 
         if (activityType.getUser().getId().equals(userId)) {
-            System.out.println("deleting activitytype");
+
+            // Remove the activity type from all associated activity sessions
+            List<ActivitySession> sessions = activitySessionRepository.findAllByActivityTypesContains(activityType);
+            for (ActivitySession session : sessions) {
+                session.getActivityTypes().remove(activityType);
+            }
+            activitySessionRepository.saveAll(sessions);
+
+            // Remove the activity type from all associated activity session metrics
+            List<ActivitySessionMetric> metrics = activitySessionMetricRepository.findAllByActivityType(activityType);
+            activitySessionMetricRepository.deleteAll(metrics);
+
+            // Remove the activity type from all associated activity groups
+            List<ActivityGroup> groups = activityGroupRepository.findAllByActivityTypesContains(activityType);
+            for (ActivityGroup group : groups) {
+                group.getActivityTypes().remove(activityType);
+                activityGroupRepository.save(group);
+            }
+
             activityTypeRepository.delete(activityType);
         } else {
             throw new RuntimeException("Activity Type does not belong do the given user.");
@@ -116,7 +139,7 @@ public class ActivityService {
             timeMetric.setStandardUnit("s");
 
             Unit seconds = new Unit();
-            seconds.setUnit("s");
+            seconds.setUnit("sec");
             seconds.setName("second");
             seconds.setConversionFactor(1);
             timeMetric.addUnit(seconds);

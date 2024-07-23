@@ -57,8 +57,6 @@ const schema = yup.object().shape({
 });
 
 const saveData = () => {
-  //const rawMetrics = toRaw(metrics.value).map(item => toRaw(item));
-
   const activityTypeData = {
     name: name.value,
     description: description.value,

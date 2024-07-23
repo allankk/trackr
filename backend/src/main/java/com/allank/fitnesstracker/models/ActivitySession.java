@@ -24,7 +24,7 @@ public class ActivitySession {
 
     private String notes;
 
-    @OneToMany(mappedBy = "activitySession", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "activitySession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActivitySessionMetric> activitySessionMetrics = new ArrayList<>();
 
     private Instant date;

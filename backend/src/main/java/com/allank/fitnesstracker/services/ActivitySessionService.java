@@ -3,6 +3,7 @@ package com.allank.fitnesstracker.services;
 import com.allank.fitnesstracker.dto.request.session.SessionActivityRequestDto;
 import com.allank.fitnesstracker.dto.request.session.SessionRequestDto;
 import com.allank.fitnesstracker.dto.request.session.SessionMetricRequestDto;
+import com.allank.fitnesstracker.dto.response.session.GroupedSessionResponseDto;
 import com.allank.fitnesstracker.dto.response.session.SessionResponseDto;
 import com.allank.fitnesstracker.mapper.ActivitySessionResponseMapper;
 import com.allank.fitnesstracker.models.*;
@@ -69,14 +70,74 @@ public class ActivitySessionService {
         activitySessionRepository.save(activitySession);
     }
 
-    public List<SessionResponseDto> getAllSessions(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public List<GroupedSessionResponseDto> getAllSessions(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         List<ActivitySession> activitySessions = activitySessionRepository.findByUser(user);
 
-        return activitySessions.stream()
-                .map(activitySessionResponseMapper::toDto)
-                .toList();
+        return activitySessionResponseMapper.toGroupedDtos(activitySessions);
+    }
+
+    public SessionResponseDto getSession(Long userId, Long activitySessionId) {
+        ActivitySession activitySession = activitySessionRepository.findById(activitySessionId).orElseThrow(() -> new RuntimeException("Activity Session not found"));
+
+        if (!activitySession.getUser().getId().equals(userId)) {
+            throw new SecurityException("Unauthorized to view this session");
+        }
+
+        return activitySessionResponseMapper.toDto(activitySession);
+    }
+
+    public void updateSession(Long userId, Long activitySessionId, SessionRequestDto sessionRequestDto) {
+        ActivitySession activitySession = activitySessionRepository.findById(activitySessionId).orElseThrow(() -> new RuntimeException("Activity Session not found"));
+
+        if (!activitySession.getUser().getId().equals(userId)) {
+            throw new SecurityException("Unauthorized to update this session");
+        }
+
+        activitySession.setDate(sessionRequestDto.date());
+        activitySession.setNotes(sessionRequestDto.notes());
+
+        activitySession.getActivityTypes().clear();
+        activitySession.getActivitySessionMetrics().clear();
+
+        for (SessionActivityRequestDto activityDto : sessionRequestDto.activities()) {
+            ActivityType activityType = activityTypeRepository.findById(activityDto.id()).orElseThrow(() -> new RuntimeException("ActivityType not found"));
+            activitySession.getActivityTypes().add(activityType);
+
+            for (SessionMetricRequestDto metricDto : activityDto.metrics()) {
+                if (metricDto.value() == null) {
+                    continue;
+                }
+
+                Metric metric = metricRepository.findById(metricDto.id())
+                        .orElseThrow(() -> new RuntimeException("Metric not found"));
+                Unit selectedUnit = unitRepository.findById(metricDto.unitId())
+                        .orElseThrow(() -> new RuntimeException("Unit not found"));
+
+                double standardizedValue = metricDto.value() * selectedUnit.getConversionFactor();
+
+                ActivitySessionMetric activitySessionMetric = new ActivitySessionMetric();
+                activitySessionMetric.setActivitySession(activitySession);
+                activitySessionMetric.setActivityType(activityType);
+                activitySessionMetric.setMetric(metric);
+                activitySessionMetric.setUnit(selectedUnit);
+                activitySessionMetric.setValue(standardizedValue);
+
+                activitySession.getActivitySessionMetrics().add(activitySessionMetric);
+            }
+        }
+
+        activitySessionRepository.save(activitySession);
+    }
+
+    public void deleteSession(Long userId, Long activitySessionId) {
+        ActivitySession activitySession = activitySessionRepository.findById(activitySessionId).orElseThrow(() -> new RuntimeException("Activity Session not found"));
+
+        if (!activitySession.getUser().getId().equals(userId)) {
+            throw new SecurityException("Unauthorized to update this session");
+        }
+
+        activitySessionRepository.delete(activitySession);
     }
 }

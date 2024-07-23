@@ -9,7 +9,4 @@
 <script setup>
 import GoBack from '@/components/utils/GoBack.vue';
 import SessionForm from '@/components/activities/SessionForm.vue';
-
-
-
 </script>

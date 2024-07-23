@@ -45,7 +45,7 @@
   
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import DatePicker from 'primevue/datepicker';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
@@ -58,6 +58,7 @@ import ActivityGroupService from '@/services/ActivityGroupService';
 import ActivitySessionService from '@/services/ActivitySessionService';
 
 const router = useRouter();
+const route = useRoute();
 
 const activityModalVisible = ref(false);
 const calendarValue = ref(new Date());
@@ -86,6 +87,30 @@ onMounted(() => {
       console.error('Error fetching activity groups:', error);
     }
   );
+
+  ActivitySessionService.getSession(route.params.id).then(
+    (response) => {
+      const session = response.data;
+
+      // Map the initial values
+      calendarValue.value = new Date(session.date);
+      notes.value = session.notes;
+
+      addedActivities.value = session.activityTypes.map(activity => ({
+        ...activity,
+        metrics: activity.metrics.map(metric => ({
+          id: metric.id,
+          name: metric.metricName,
+          selectedUnit: { id: metric.selectedUnitId, unit: metric.selectedUnitName },
+          value: metric.value,
+          units: metric.units
+        }))
+      }));
+    },
+    (error) => {
+      console.error('Error fetching activitySession: ', error)
+    }
+  )
 });
 
 const openActivityModal = () => {
@@ -120,7 +145,6 @@ const handleAddActivities = (selectedActivities) => {
 };
 
 const handleRemoveActivity = (activity) => {
-  console.log(addedActivities);
   addedActivities.value = addedActivities.value.filter(x => x.id !== activity.id);
 }
   
@@ -148,7 +172,7 @@ const submitForm = () => {
     }))
   };
 
-  ActivitySessionService.addSession(session).then(
+  ActivitySessionService.updateSession(route.params.id, session).then(
     (response) => {
       if (response.status == 200) {
         router.push('/activity/sessions');

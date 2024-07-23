@@ -7,9 +7,9 @@
         </Button>
         <Dialog header="add activity type" class="w-full md:w-1/2 lg:w-1/3 absolute md:static top-20" v-model:visible="visible" 
          :modal="true" :draggable="false">
-            <ActivityTypeAddCard :visible="visible" @closeModal="visible = false"/>
+            <ActivityTypeAddCard :visible="visible" @closeModal="closedModal"/>
         </Dialog>
-        <ActivityList />    
+        <ActivityList :key="activityListKey" />    
     </div>
 </template>
 
@@ -21,5 +21,12 @@ import ActivityTypeAddCard from '@/components/activities/ActivityTypeAddCard.vue
 import ActivityList from '@/components/activities/ActivityList.vue';
 
 const visible = ref(false);
+const activityListKey = ref(0);
+
+const closedModal = () => {
+    visible.value = false;
+    // rerender after add modal closed
+    activityListKey.value += 1;
+}
 
 </script>

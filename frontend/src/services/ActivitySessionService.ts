@@ -4,6 +4,7 @@ import authHeader from './auth-header';
 const API_AUTH_URL = "http://localhost:8098/api/";
 
 interface Session {
+  id?: number,
   date: Date,
   notes: string,
   activities: {
@@ -29,17 +30,25 @@ class ActivityGroupService {
     });
   }
 
-  //deleteActivityGroup(id: number) {
-  //  return axios.delete(API_AUTH_URL + 'activitygroup/delete/' + id, { 
-  //      headers: authHeader() 
-  //  });
-  //}
+  getSession(id: number) {
+    return axios.get(API_AUTH_URL + 'activitysession/' + id, { 
+        headers: authHeader() 
+    });
+  }
 
-  //updateActivityGroup(id: number, activityGroup: ActivityGroup) {
-  //  return axios.post(API_AUTH_URL + 'activitygroup/edit/' + id, activityGroup, { 
-  //      headers: authHeader() 
-  //  });
-  //}
+  updateSession(id: number, session: Session) {
+    console.log('topost:')
+    console.log(session);
+    return axios.post(API_AUTH_URL + 'activitysession/edit/' + id, session, { 
+        headers: authHeader() 
+    });
+  }
+
+  deleteSession(id: number) {
+    return axios.delete(API_AUTH_URL + 'activitysession/delete/' + id, { 
+        headers: authHeader() 
+    });
+  }
 }
 
 export default new ActivityGroupService();
