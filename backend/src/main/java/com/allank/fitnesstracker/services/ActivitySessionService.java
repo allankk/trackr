@@ -11,7 +11,12 @@ import com.allank.fitnesstracker.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ActivitySessionService {
@@ -74,6 +79,28 @@ public class ActivitySessionService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         List<ActivitySession> activitySessions = activitySessionRepository.findByUser(user);
+
+        return activitySessionResponseMapper.toGroupedDtos(activitySessions);
+    }
+
+    public List<GroupedSessionResponseDto> getFilteredSessions(Long userId, Instant startDate, Instant endDate, List<Long> activityTypes) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        List<ActivitySession> activitySessions = new ArrayList<>(activitySessionRepository.findByUser(user));
+
+        // Filter by date range
+        if (startDate != null && endDate != null) {
+            activitySessions = activitySessions.stream()
+                    .filter(session -> !session.getDate().isBefore(startDate) && !session.getDate().isAfter(endDate))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+
+        // Filter by activity types
+        if (activityTypes != null && !activityTypes.isEmpty()) {
+            activitySessions = activitySessions.stream()
+                    .filter(session -> session.getActivityTypes().stream().anyMatch(type -> activityTypes.contains(type.getId())))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
 
         return activitySessionResponseMapper.toGroupedDtos(activitySessions);
     }

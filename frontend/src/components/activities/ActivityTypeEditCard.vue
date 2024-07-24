@@ -89,8 +89,6 @@ const updateData = () => {
 
   ActivityService.updateActivityType(props.activity.id, activityTypeData).then(
     (response) => {
-      console.log('success');
-      console.log(response);
       emit('closeModal');
     },
     (error) => {

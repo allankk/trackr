@@ -73,8 +73,6 @@ const saveData = () => {
 
   ActivityGroupService.addActivityGroup(activityGroupData).then(
     (response) => {
-      console.log('success');
-      console.log(response);
       emit('closeModal');
     },
     (error) => {

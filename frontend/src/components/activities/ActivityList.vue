@@ -65,7 +65,6 @@ const closeConfirmation = () => {
 const deleteActivity = () => {
   ActivityService.deleteActivityType(activeType.value.id).then(
     (response) => {
-      console.log(response.data);
       getAllActivities();
     },
     (error) => {

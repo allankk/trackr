@@ -1,5 +1,6 @@
 package com.allank.fitnesstracker.controller;
 
+import com.allank.fitnesstracker.dto.request.session.FilteredSessionsRequestDto;
 import com.allank.fitnesstracker.dto.response.MessageDto;
 import com.allank.fitnesstracker.dto.request.session.SessionRequestDto;
 import com.allank.fitnesstracker.dto.response.session.GroupedSessionResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -41,6 +43,22 @@ public class ActivitySessionController {
         Long userId = userDetails.getId();
 
         List<GroupedSessionResponseDto> sessions = activitySessionService.getAllSessions(userId);
+
+        return ResponseEntity.ok(sessions);
+    }
+
+    @ResponseBody
+    @PostMapping(path = "/filtered")
+    public ResponseEntity<List<GroupedSessionResponseDto>> getFilteredSessions(@RequestBody FilteredSessionsRequestDto filterRequest) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+
+        List<GroupedSessionResponseDto> sessions = activitySessionService.getFilteredSessions(
+                userId,
+                filterRequest.startDate(),
+                filterRequest.endDate(),
+                filterRequest.activityTypes()
+        );
 
         return ResponseEntity.ok(sessions);
     }

@@ -17,10 +17,23 @@ interface Session {
   }[]
 }
 
+interface FilterRequest {
+  sortOrder?: string,
+  startDate?: Date,
+  endDate?: Date,
+  activityTypes?: Array<number>,
+}
+
 class ActivityGroupService {
   getAllSessions() {
     return axios.get(API_AUTH_URL + 'activitysession/all', { 
         headers: authHeader() 
+    });
+  }
+
+  getFilteredSessions(filterRequest : FilterRequest) {
+    return axios.post(API_AUTH_URL + 'activitysession/filtered', filterRequest, {
+      headers: authHeader()
     });
   }
 

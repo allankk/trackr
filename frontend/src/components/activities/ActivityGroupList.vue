@@ -83,7 +83,6 @@ onMounted(() => {
 const getAllActivityGroups = () => {
   ActivityGroupService.getAllActivityGroups().then(
       (response) => {
-        console.log(response.data);
         activityGroups.value = response.data;
       },
       (error) => {
