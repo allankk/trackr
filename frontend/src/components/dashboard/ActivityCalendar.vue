@@ -1,0 +1,95 @@
+<template>
+  <div class="w-full lg:max-w-7xl p-0 md:p-4 flex flex-col md:flex-row mx-auto justify-between items-center md:items-start">
+    <div class="activity-calendar rounded-md w-full xl:w-1/3 pt-1">
+        <DatePicker 
+          v-model="selectedDate" 
+          inline 
+          :pt="calendarPT" 
+          class="w-full border-0 mt-12 shadow-lg min-w-72 bg-white"
+          />
+    </div>
+    <SessionSummary :sessions="sessionSummary" :selectedDate="selectedDate" class="w-full xl:w-1/2 2xl:w-2/3 m-2"/>
+  </div>
+</template>
+
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+import DashboardService from '@/services/DashboardService';
+import SessionSummary from '@/components/dashboard/SessionSummary.vue';
+import DatePicker from 'primevue/datepicker';
+
+const selectedDate = ref(null);
+const sessionDates = ref([]);
+const sessionSummary = ref([]);
+
+const calendarPT = {
+  day: (date) => {
+    const { day, month, year } = date.context.date;
+    const isHighlighted = sessionDates.value.some(d =>
+      d.getFullYear() === year &&
+      d.getMonth() === month &&
+      d.getDate() === day
+    );
+
+    return {
+      class: isHighlighted ? 'highlighted-day' : ''
+    };
+  }
+};
+
+onMounted(() => {
+  DashboardService.getSessionDates().then(
+    (response) => {
+      let latestDate = null;
+      if (response.data.dates) {
+        sessionDates.value = response.data.dates.map(d => { 
+          let date = new Date(d);
+
+          if (date > latestDate) latestDate = date;
+          return date;
+        });
+
+        selectedDate.value = latestDate;
+      }
+    },
+    (error) => {
+      console.log(error);
+    }
+  )
+})
+
+watch(selectedDate, async (newDate) => {
+  console.log('selected date change');
+  console.log(selectedDate);
+  if (newDate) {
+    try {
+      const response = await DashboardService.getSessionByDate(newDate.toISOString());
+      sessionSummary.value = response.data;
+    } catch (error) {
+      console.log(error);
+      sessionSummary.value = [];
+    }
+  } else {
+    sessionSummary.value = [];
+  }
+});
+</script>
+
+<style>
+.p-datepicker-panel.p-component {
+  border: none;
+}
+.activity-calendar .highlighted-day {
+  background: #10b981;
+  font-weight: bold;
+  color: white;
+}
+.activity-calendar .p-datepicker-day-cell .p-datepicker-day.highlighted-day:hover {
+  background: #0ca270;
+  font-weight: bold;
+  color: white;
+}
+</style>
+
+
+

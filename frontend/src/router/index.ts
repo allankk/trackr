@@ -10,6 +10,7 @@ import SessionView from '../views/SessionView.vue'
 import CreateSessionView from '../views/CreateSessionView.vue'
 import EditSessionView from '../views/EditSessionView.vue'
 import UserBoard from '../components/UserBoard.vue'
+import DashboardView from '../views/DashboardView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -43,7 +44,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/userboard",
     component: UserBoard
   },
-    {
+  {
+    path: "/dashboard",
+    component: DashboardView
+  },
+  {
     path: '/activity',
     redirect: '/activity/types',
     children: [

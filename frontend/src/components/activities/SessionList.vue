@@ -23,15 +23,15 @@
       </div>
       <div class="w-full flex-1 mb-4 md:ml-4 flex items-center justify-center">
         <button @click="toggleSortOrder" class="sort-button border rounded-md bg-white w-full min-w-40 py-2 px-6">
-          <span class="px-2">{{ sortOrder === 'asc' ? 'Oldest' : 'Newest' }}</span>
+          <span class="px-2">{{ sortOrder === 'asc' ? 'sort by oldest' : 'sort by newest' }}</span>
           <i :class="sortOrder === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down'"></i>
         </button>
       </div>
     </div>
     <div v-if="groupedSessions.length">
-      <div v-for="group in groupedSessions" :key="group.date">
+      <div v-for="group in groupedSessions" :key="group.date" class="mb-16">
         <div class="text-xl font-bold text-left">{{ formatDate(group.date) }}</div>
-        <div v-for="session in group.sessions" :key="session.id" class="session-container flex w-full flex-col p-4 my-4 border-2 rounded-lg shadow-md">
+        <div v-for="session in group.sessions" :key="session.id" class="session-container flex w-full flex-col p-4 my-4 border rounded-xl shadow-xl">
           <div class="flex justify-between">
             <div class="font-bold text-left">
               <span v-if="session.notes">{{ session.notes }}</span>
@@ -43,7 +43,7 @@
               <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2" @click="openConfirmation(session)" />
             </div>
           </div>
-          <div v-for="type in session.activityTypes" :key="type.id" class="activity-type grid grid-cols-3 rounded-lg w-full shadow-md justify-between items-center my-2 p-4 min-h-20 bg-white">
+          <div v-for="type in session.activityTypes" :key="type.id" class="activity-type grid grid-cols-3 rounded-lg w-full border-2 justify-between items-center my-2 p-4 min-h-20 bg-white">
             <div class="text-lg col-span-3 md:col-span-1 font-bold text-left">{{ type.name }}</div>
             <div class="col-span-3 md:col-span-2">
               <div v-for="metric in type.metrics" :key="metric.id" class="text-left flex border-b-1">
@@ -88,7 +88,7 @@ const displayConfirmation = ref(false);
 const dateRange = ref(null);
 const selectedActivityTypes = ref([]);
 const activityTypes = ref([]);
-const sortOrder = ref('asc');
+const sortOrder = ref('desc');
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -192,6 +192,10 @@ onMounted(() => {
 
 .btn-container button:hover {
   background-color: rgb(84, 95, 105);
+}
+
+.session-container {
+  background-color: var(--surface-ground);
 }
 
 .activity-type {

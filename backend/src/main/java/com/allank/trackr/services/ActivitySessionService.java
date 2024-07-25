@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,6 +112,16 @@ public class ActivitySessionService {
         }
 
         return activitySessionResponseMapper.toDto(activitySession);
+    }
+
+    public List<GroupedSessionResponseDto> getSessionByDate(Long userId, Instant sessionDate) {
+        List<ActivitySession> activitySessions = activitySessionRepository.findByDate(sessionDate);
+
+        List<ActivitySession> userSessions = activitySessions.stream()
+                .filter(session -> session.getUser().getId().equals(userId))
+                .toList();
+
+        return userSessions.isEmpty() ? Collections.emptyList() : activitySessionResponseMapper.toGroupedDtos(userSessions);
     }
 
     public void updateSession(Long userId, Long activitySessionId, SessionRequestDto sessionRequestDto) {

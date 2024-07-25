@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -69,6 +70,17 @@ public class ActivitySessionController {
         Long userId = userDetails.getId();
 
         SessionResponseDto sessions = activitySessionService.getSession(userId, activitySessionId);
+
+        return ResponseEntity.ok(sessions);
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/date/{date}")
+    public ResponseEntity<Object> getActivitySessionsByDate(@PathVariable Instant date) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+
+        List<GroupedSessionResponseDto> sessions = activitySessionService.getSessionByDate(userId, date);
 
         return ResponseEntity.ok(sessions);
     }

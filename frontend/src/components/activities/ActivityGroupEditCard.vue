@@ -97,19 +97,19 @@ const updateData = () => {
 }
 
 onMounted(() => {
-      ActivityService.getAllActivities().then(
-      (response) => {
-        response.data.forEach(item => {
-          dropdownItems.value.push({
-            name: item.name,
-            code: item.id
-          })
+  ActivityService.getAllActivities().then(
+    (response) => {
+      response.data.forEach(item => {
+        dropdownItems.value.push({
+          name: item.name,
+          code: item.id
         })
-      },
-      (error) => {
-        console.log('error: ' + error.toString());
-      }
-    )
+      })
+    },
+    (error) => {
+      console.log('error: ' + error.toString());
+    }
+  )
 });
 
 

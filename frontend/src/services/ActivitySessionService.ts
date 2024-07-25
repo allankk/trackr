@@ -24,7 +24,7 @@ interface FilterRequest {
   activityTypes?: Array<number>,
 }
 
-class ActivityGroupService {
+class ActivitySessionService {
   getAllSessions() {
     return axios.get(API_AUTH_URL + 'activitysession/all', { 
         headers: authHeader() 
@@ -64,4 +64,4 @@ class ActivityGroupService {
   }
 }
 
-export default new ActivityGroupService();
+export default new ActivitySessionService();

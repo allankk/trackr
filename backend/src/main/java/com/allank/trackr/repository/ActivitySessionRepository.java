@@ -5,9 +5,11 @@ import com.allank.trackr.models.ActivityType;
 import com.allank.trackr.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface ActivitySessionRepository extends JpaRepository<ActivitySession, Long> {
     List<ActivitySession> findByUser(User user);
     List<ActivitySession> findAllByActivityTypesContains(ActivityType activityType);
+    List<ActivitySession> findByDate(Instant date);
 }

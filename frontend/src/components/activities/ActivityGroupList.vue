@@ -1,7 +1,7 @@
 <template>
   <div class="activity-list mx-auto max-w-5xl">
     <div v-for="activityGroup in activityGroups" :key="activityGroup.id" class="my-2">
-        <div class="bg-white px-4 md:px-20 py-4 rounded-xl shadow-sm flex items-center flex-row justify-between">
+        <div class="bg-white px-4 md:px-20 py-4 rounded-xl border shadow-sm flex items-center flex-row justify-between">
             <div class="flex text-left flex-col md:flex-row">
               <span class="text-left font-bold text-xl">{{ activityGroup.name }}</span>
             </div>

@@ -8,7 +8,7 @@ import store from './store/index'
 import { FontAwesomeIcon } from './plugins/fontawesome'
 import PrimeVue, { defaultOptions } from 'primevue/config';
 import Aura from '@primevue/themes/aura';
-
+import AnimateOnScroll from 'primevue/animateonscroll';
 
 createApp(App)
     .use(router)
@@ -23,4 +23,5 @@ createApp(App)
         },
     })
     .component("font-awesome-icon", FontAwesomeIcon)
+    .directive('animateonscroll', AnimateOnScroll)
     .mount('#app')

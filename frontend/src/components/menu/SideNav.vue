@@ -19,7 +19,7 @@ const dashItems = computed(() => {
     if (currentUser.value) {
         return [
             { label: 'New Session', icon: 'pi pi-fw pi-plus-circle', to: '/activity/sessions/create' },
-            { label: 'Dashboard', icon: 'pi pi-fw pi-table', to: '/userboard' },
+            { label: 'Dashboard', icon: 'pi pi-fw pi-table', to: '/dashboard' },
         ];
     }
     return [];
@@ -58,7 +58,7 @@ const loggedInItems = computed(() => {
                 items: [
                     { label: 'Sessions', icon: 'pi pi-fw pi-stopwatch', to: '/activity/sessions' },
                     { label: 'Groups', icon: 'pi pi-fw pi-users', to: '/activity/groups' },
-                    { label: 'Exercises', icon: 'pi pi-fw pi-wave-pulse', to: '/activity/types' },
+                    { label: 'Activities', icon: 'pi pi-fw pi-wave-pulse', to: '/activity/types' },
                 ]
             }
         ];
