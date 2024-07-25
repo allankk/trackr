@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.allank</groupId>
-    <artifactId>fitnesstracker</artifactId>
+    <artifactId>trackr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>fitnesstracker</name>
+    <name>trackr</name>
     <description>Exercise tracker</description>
 
     <parent>
