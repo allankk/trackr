@@ -5,7 +5,8 @@
       <DatePicker v-model="selectedDate" inline :pt="calendarPT"
         class="w-full border-0 mt-12 shadow-lg min-w-72 bg-white" />
     </div>
-    <SessionSummary :sessions="sessionSummary" :selectedDate="selectedDate"
+
+    <SessionSummary  :sessions="sessionSummary" :selectedDate="selectedDate" :loading="loading"
       class="w-full xl:w-1/2 2xl:w-2/3 m-2 md:mr-0" />
   </div>
 </template>
@@ -19,6 +20,8 @@ import DatePicker from 'primevue/datepicker';
 const selectedDate = ref(null);
 const sessionDates = ref([]);
 const sessionSummary = ref([]);
+
+const loading = ref(true);
 
 const calendarPT = {
   day: (date) => {
@@ -53,16 +56,17 @@ onMounted(() => {
     (error) => {
       console.log(error);
     }
-  )
+  );
 })
 
 watch(selectedDate, async (newDate) => {
-  console.log('selected date change');
-  console.log(selectedDate);
+  loading.value = true;
   if (newDate) {
     try {
       const response = await DashboardService.getSessionByDate(newDate.toISOString());
       sessionSummary.value = response.data;
+      loading.value = false;
+
     } catch (error) {
       console.log(error);
       sessionSummary.value = [];
@@ -70,7 +74,9 @@ watch(selectedDate, async (newDate) => {
   } else {
     sessionSummary.value = [];
   }
+  
 });
+
 </script>
 
 <style>

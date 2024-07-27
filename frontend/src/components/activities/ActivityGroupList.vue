@@ -1,6 +1,9 @@
 <template>
   <div class="activity-list mx-auto max-w-5xl">
-    <div v-for="activityGroup in activityGroups" :key="activityGroup.id" class="my-2">
+    <div v-if="loading" class="flex justify-center items-center h-64">
+      <ProgressSpinner style="width: 50px; height: 50px" animationDuration=".5s"/>
+    </div>
+    <div else v-for="activityGroup in activityGroups" :key="activityGroup.id" class="my-2">
       <div class="bg-white px-4 md:px-20 py-4 rounded-xl border shadow-sm flex items-center flex-row justify-between">
         <div class="flex text-left flex-col md:flex-row">
           <span class="text-left font-bold text-xl">{{ activityGroup.name }}</span>
@@ -36,12 +39,15 @@ import ActivityGroupService from '@/services/ActivityGroupService';
 import ActivityGroupEditCard from '@/components/activities/ActivityGroupEditCard';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
 import { onMounted, ref } from 'vue';
 
 const activityGroups = ref([]);
 const activeGroup = ref(null);
 const displayConfirmation = ref(false);
 const displayEdit = ref(false);
+
+const loading = ref(true);
 
 const openEditDialog = (activityGroup) => {
   activeGroup.value = activityGroup;
@@ -84,6 +90,7 @@ onMounted(() => {
 });
 
 const getAllActivityGroups = () => {
+  loading.value = true;
   ActivityGroupService.getAllActivityGroups().then(
     (response) => {
       activityGroups.value = response.data;
@@ -92,7 +99,9 @@ const getAllActivityGroups = () => {
       console.log('error');
       console.log(error.toString());
     }
-  )
+  ).finally(() => {
+    loading.value = false;
+  });
 }
 </script>
 

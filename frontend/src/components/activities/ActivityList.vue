@@ -1,5 +1,8 @@
 <template>
   <div class="activity-list mx-auto max-w-5xl">
+    <div v-if="loading">
+      <ProgressSpinner style="width: 50px; height: 50px" animationDuration=".5s"></ProgressSpinner>
+    </div>
     <div v-for="activity in activityTypes" :key="activity.id" class="my-2">
       <div class="bg-white px-4 md:px-20 py-4 rounded-xl shadow-sm flex border items-center flex-row justify-between">
         <div class="flex text-left flex-col md:flex-row">
@@ -37,12 +40,15 @@ import ActivityService from '@/services/ActivityService';
 import ActivityTypeEditCard from '@/components/activities/ActivityTypeEditCard';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import ProgressSpinner  from 'primevue/progressspinner';
 import { onMounted, ref } from 'vue';
 
 const activityTypes = ref('');
 const activeType = ref(null);
 const displayConfirmation = ref(false);
 const displayEdit = ref(false);
+
+const loading = ref(true);
 
 const openEditDialog = (activity) => {
   activeType.value = activity;
@@ -85,6 +91,7 @@ onMounted(() => {
 });
 
 const getAllActivities = () => {
+  loading.value = true;
   ActivityService.getAllActivities().then(
     (response) => {
       activityTypes.value = response.data;
@@ -93,7 +100,9 @@ const getAllActivities = () => {
       console.log('error');
       console.log(error.toString());
     }
-  )
+  ).finally(() => {
+    loading.value = false;
+  })
 }
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <div class="mx-auto max-w-5xl">
+  <div v-if="loading">
+    <ProgressSpinner style="width: 50px; height: 50px" animationDuration=".5s"></ProgressSpinner>
+  </div>
+  <div v-else class="mx-auto max-w-5xl">
     <div class="flex flex-col md:flex-row justify-between mt-4 mb-10 items-center">
       <div class="w-full mb-4 md:flex-1 md:mr-4">
         <MultiSelect v-model="selectedActivityTypes" :options="activityTypes" option-label="name"
@@ -74,6 +77,7 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import MultiSelect from 'primevue/multiselect';
 import DatePicker from 'primevue/datepicker';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const groupedSessions = ref([]);
 const activeSession = ref(null);
@@ -83,6 +87,8 @@ const dateRange = ref(null);
 const selectedActivityTypes = ref([]);
 const activityTypes = ref([]);
 const sortOrder = ref('desc');
+
+const loading = ref(true);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -126,6 +132,7 @@ const deleteSession = () => {
 
 // Fetch sessions based on filters
 const fetchSessions = () => {
+  loading.value = true;
   const startDate = dateRange.value?.[0]?.toISOString() || null;
   const endDate = dateRange.value?.[1]?.toISOString() || dateRange.value?.[0] || null;
 
@@ -147,7 +154,9 @@ const fetchSessions = () => {
       console.log('error');
       console.log(error.toString());
     }
-  );
+  ).finally(() => {
+    loading.value = false;
+  });
 };
 
 // Fetch activity types

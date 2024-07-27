@@ -1,29 +1,35 @@
 <template>
   <div class="session-summary">
     <div class="font-bold text-lg mt-10 md:mt-0">{{ formattedDate }} summary</div>
-    <div v-if="sessions.length">
-      <div v-for="(session, index) in sessions" :key="index" class="session flex flex-col p-2 pr-0">
-        <div v-for="(s, i) in session.sessions" :key="i" class="session-details bg-white my-2 shadow-lg flex-col">
-          <p class="notes p-1 w-full">{{ s.notes }}</p>
-          <div class="flex">
-            <div v-for="(activityType, j) in s.activityTypes" :key="j" class="p-2">
-              <p class="activity-name">{{ activityType.name }}</p>
-              <div class="metrics">
-                <div v-for="(metric, k) in activityType.metrics" :key="k" class="metric">
-                  <span>{{ metric.value }} {{ formatUnit(metric.selectedUnitName) }}</span>
+    <div v-if="loading" class="session-summary">
+      <ProgressSpinner style="width: 50px; height: 50px; margin-top: 4rem" animationDuration=".5s"></ProgressSpinner>
+    </div>
+    <div v-else>
+      <div v-if="sessions.length">
+        <div v-for="(session, index) in sessions" :key="index" class="session flex flex-col p-2 pr-0">
+          <div v-for="(s, i) in session.sessions" :key="i" class="session-details bg-white my-2 shadow-lg flex-col">
+            <p class="notes p-1 w-full">{{ s.notes }}</p>
+            <div class="flex">
+              <div v-for="(activityType, j) in s.activityTypes" :key="j" class="p-2">
+                <p class="activity-name">{{ activityType.name }}</p>
+                <div class="metrics">
+                  <div v-for="(metric, k) in activityType.metrics" :key="k" class="metric">
+                    <span>{{ metric.value }} {{ formatUnit(metric.selectedUnitName) }}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <p v-else>No sessions for this date.</p>
     </div>
-    <p v-else>No sessions for this date.</p>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
   sessions: {
@@ -33,6 +39,10 @@ const props = defineProps({
   selectedDate: {
     type: Date,
     required: false
+  },
+  loading: {
+    type: Boolean,
+    required: true
   }
 });
 

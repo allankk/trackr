@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, nextTick } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import ActivityService from '@/services/ActivityService.ts';
 import DashboardService from '@/services/DashboardService.ts';
 import moment from 'moment';
