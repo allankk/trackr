@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ActivitySessionMetricRepository extends JpaRepository<ActivitySessionMetric, Long> {
     List<ActivitySessionMetric> findAllByActivityType(ActivityType activityType);
+    List<ActivitySessionMetric> findByActivitySessionUserIdAndActivityTypeIdAndMetricId(Long userId, Long activityTypeId, Long metricId);
 }

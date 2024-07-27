@@ -8,7 +8,7 @@
           class="w-full border-0 mt-12 shadow-lg min-w-72 bg-white"
           />
     </div>
-    <SessionSummary :sessions="sessionSummary" :selectedDate="selectedDate" class="w-full xl:w-1/2 2xl:w-2/3 m-2"/>
+    <SessionSummary :sessions="sessionSummary" :selectedDate="selectedDate" class="w-full xl:w-1/2 2xl:w-2/3 m-2 md:mr-0"/>
   </div>
 </template>
 

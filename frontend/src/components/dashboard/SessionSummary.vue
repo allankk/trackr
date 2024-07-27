@@ -2,7 +2,7 @@
   <div class="session-summary">
     <div class="font-bold text-lg mt-10 md:mt-0">{{ formattedDate }} summary</div>
     <div v-if="sessions.length">
-      <div v-for="(session, index) in sessions" :key="index" class="session flex flex-col p-2">
+      <div v-for="(session, index) in sessions" :key="index" class="session flex flex-col p-2 pr-0">
         <div v-for="(s, i) in session.sessions" :key="i" class="session-details bg-white my-2 shadow-lg flex-col">
           <p class="notes p-1 w-full">{{ s.notes }}</p>
           <div class="flex">

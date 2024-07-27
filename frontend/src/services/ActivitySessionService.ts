@@ -50,8 +50,6 @@ class ActivitySessionService {
   }
 
   updateSession(id: number, session: Session) {
-    console.log('topost:')
-    console.log(session);
     return axios.post(API_AUTH_URL + 'activitysession/edit/' + id, session, { 
         headers: authHeader() 
     });
