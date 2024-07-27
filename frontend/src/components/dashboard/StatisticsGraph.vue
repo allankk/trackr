@@ -5,36 +5,18 @@
       <div class="w-full flex flex-col md:flex-row justify-center mb-4 md:flex-1 md:mr-4">
         <div class="flex flex-col my-2 text-left md:text-center">
           <div class="mb-2 italic">activity</div>
-          <Select 
-            v-model="selectedActivityType" 
-            :options="activityTypes" 
-            optionLabel="name" 
-            placeholder="Select Activity" 
-            class="md:max-w-60 min-w-40 mx-4 text-left"
-            @change="getMetrics"
-          />
+          <Select v-model="selectedActivityType" :options="activityTypes" optionLabel="name"
+            placeholder="Select Activity" class="md:max-w-60 min-w-40 mx-4 text-left" @change="getMetrics" />
         </div>
         <div class="flex flex-col my-2">
           <div class="mb-2 italic text-left md:text-center">metric</div>
-          <Select 
-            v-model="selectedMetric" 
-            :options="metrics" 
-            optionLabel="name" 
-            placeholder="Select Metric" 
-            class="md:max-w-60 min-w-40 mx-4 text-left"
-            @change="getUnits"
-          />
+          <Select v-model="selectedMetric" :options="metrics" optionLabel="name" placeholder="Select Metric"
+            class="md:max-w-60 min-w-40 mx-4 text-left" @change="getUnits" />
         </div>
         <div class="flex flex-col my-2">
           <div class="mb-2 italic text-left md:text-center">unit</div>
-          <Select 
-            v-model="selectedUnit" 
-            :options="units" 
-            optionLabel="name" 
-            placeholder="Select Unit" 
-            class="md:max-w-60 min-w-40 mx-4 text-left"
-            @change="getActivityResults"
-          />
+          <Select v-model="selectedUnit" :options="units" optionLabel="name" placeholder="Select Unit"
+            class="md:max-w-60 min-w-40 mx-4 text-left" @change="getActivityResults" />
         </div>
       </div>
       <Chart type="line" :data="lineData" :options="lineOptions" class="md:p-6 mx-auto" />
@@ -58,8 +40,8 @@ const units = ref([]);
 const selectedUnit = ref(null);
 
 const lineData = reactive({
-    labels: [],
-    datasets: []
+  labels: [],
+  datasets: []
 });
 
 const lineOptions = {
@@ -100,14 +82,14 @@ const getActivityResults = async () => {
       lineData.labels = ['January', 'February', 'March']
 
       lineData.labels = response.data.dates.map(d => moment(new Date(d)).format('DD.MM.yyyy'));
-      lineData.datasets= [
+      lineData.datasets = [
         {
           label: 'value',
           data: response.data.results,
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.3
+          fill: false,
+          backgroundColor: '#00bb7e',
+          borderColor: '#00bb7e',
+          tension: 0.3
         }
       ];
     },
@@ -128,7 +110,7 @@ onMounted(() => {
     (error) => {
       console.error(error);
     }
-  
+
   )
 
 })
@@ -152,5 +134,3 @@ onMounted(() => {
   }
 }
 </style>
-
-

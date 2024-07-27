@@ -2,24 +2,14 @@
   <div class="mx-auto max-w-5xl">
     <div class="flex flex-col md:flex-row justify-between mt-4 mb-10 items-center">
       <div class="w-full mb-4 md:flex-1 md:mr-4">
-        <MultiSelect 
-          v-model="selectedActivityTypes" 
-          :options="activityTypes" 
-          option-label="name" 
-          placeholder="Select Activity Types" 
-          @change="fetchSessions" 
-          class="activity-select w-full md:min-w-60 md:max-w-60"
-        />
+        <MultiSelect v-model="selectedActivityTypes" :options="activityTypes" option-label="name"
+          placeholder="Select Activity Types" @change="fetchSessions"
+          class="activity-select w-full md:min-w-60 md:max-w-60" />
       </div>
       <div class="w-full mb-4 flex-1 mx-4">
-        <DatePicker v-model="dateRange" selection-mode="range" 
-          showButtonBar 
-          placeholder="Select Date Range" 
-          @clear-click="fetchSessions" 
-          @date-select="fetchSessions" 
-          dateFormat="dd.mm.yy"
-          class="date-picker shadow-none w-full px-0 py-0 cursor-pointer text-center"
-        />
+        <DatePicker v-model="dateRange" selection-mode="range" showButtonBar placeholder="Select Date Range"
+          @clear-click="fetchSessions" @date-select="fetchSessions" dateFormat="dd.mm.yy"
+          class="date-picker shadow-none w-full px-0 py-0 cursor-pointer text-center" />
       </div>
       <div class="w-full flex-1 mb-4 md:ml-4 flex items-center justify-center">
         <button @click="toggleSortOrder" class="sort-button border rounded-md bg-white w-full min-w-40 py-2 px-6">
@@ -31,7 +21,8 @@
     <div v-if="groupedSessions.length">
       <div v-for="group in groupedSessions" :key="group.date" class="mb-16">
         <div class="text-xl font-bold text-left">{{ formatDate(group.date) }}</div>
-        <div v-for="session in group.sessions" :key="session.id" class="session-container flex w-full flex-col p-4 my-4 border rounded-xl shadow-xl">
+        <div v-for="session in group.sessions" :key="session.id"
+          class="session-container flex w-full flex-col p-4 my-4 border rounded-xl shadow-xl">
           <div class="flex justify-between">
             <div class="font-bold text-left">
               <span v-if="session.notes">{{ session.notes }}</span>
@@ -40,14 +31,16 @@
               <router-link :to="'/activity/sessions/edit/' + session.id">
                 <Button icon="pi pi-pencil" severity="secondary" rounded outlined class="mx-2" />
               </router-link>
-              <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2" @click="openConfirmation(session)" />
+              <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2"
+                @click="openConfirmation(session)" />
             </div>
           </div>
-          <div v-for="type in session.activityTypes" :key="type.id" class="activity-type grid grid-cols-3 rounded-lg w-full border-2 justify-between items-center my-2 p-4 min-h-20 bg-white">
+          <div v-for="type in session.activityTypes" :key="type.id"
+            class="activity-type grid grid-cols-3 rounded-lg w-full border-2 justify-between items-center my-2 p-4 min-h-20 bg-white">
             <div class="text-lg col-span-3 md:col-span-1 font-bold text-left">{{ type.name }}</div>
             <div class="col-span-3 md:col-span-2">
               <div v-for="metric in type.metrics" :key="metric.id" class="text-left flex border-b-1">
-                <div class="min-w-24 font-bold">{{ metric.metricName }}</div> 
+                <div class="min-w-24 font-bold">{{ metric.metricName }}</div>
                 <span class="min-w-14 font-bold">{{ metric.value }}</span>
                 <span>{{ metric.selectedUnitName }}s</span>
               </div>
@@ -55,15 +48,16 @@
           </div>
         </div>
       </div>
-      <Dialog header="Confirmation" v-model:visible="displayConfirmation" class="w-screen md:w-1/2 2xl:w-1/4" :modal="true">
-          <div class="flex align-items-center justify-content-center">
-              <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-              <span>Are you sure you want to delete this activity group?</span>
-          </div>
-          <template #footer>
-              <Button label="Cancel" raised @click="closeConfirmation" class="mx-4" />
-              <Button label="Delete" text raised @click="deleteSession" class="mr-4" />
-          </template>
+      <Dialog header="Confirmation" v-model:visible="displayConfirmation" class="w-screen md:w-1/2 2xl:w-1/4"
+        :modal="true">
+        <div class="flex align-items-center justify-content-center">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+          <span>Are you sure you want to delete this activity group?</span>
+        </div>
+        <template #footer>
+          <Button label="Cancel" raised @click="closeConfirmation" class="mx-4" />
+          <Button label="Delete" text raised @click="deleteSession" class="mr-4" />
+        </template>
       </Dialog>
     </div>
     <div v-else>

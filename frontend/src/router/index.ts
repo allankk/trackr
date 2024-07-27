@@ -1,32 +1,33 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import HelloView from '../views/HelloView.vue'
-import LoginCard from '../components/LoginCard.vue'
-import RegisterCard from '../components/RegisterCard.vue'
-import ProfileView from '../views/ProfileView.vue'
-import ActivityTypeView from '../views/ActivityTypeView.vue'
-import ActivityGroupView from '../views/ActivityGroupView.vue'
-import SessionView from '../views/SessionView.vue'
-import CreateSessionView from '../views/CreateSessionView.vue'
-import EditSessionView from '../views/EditSessionView.vue'
-import UserBoard from '../components/UserBoard.vue'
-import DashboardView from '../views/DashboardView.vue'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import HelloView from "../views/HelloView.vue";
+import LoginCard from "../components/LoginCard.vue";
+import RegisterCard from "../components/RegisterCard.vue";
+import ProfileView from "../views/ProfileView.vue";
+import ActivityTypeView from "../views/ActivityTypeView.vue";
+import ActivityGroupView from "../views/ActivityGroupView.vue";
+import SessionView from "../views/SessionView.vue";
+import CreateSessionView from "../views/CreateSessionView.vue";
+import EditSessionView from "../views/EditSessionView.vue";
+import UserBoard from "../components/UserBoard.vue";
+import DashboardView from "../views/DashboardView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "/",
+    name: "home",
+    component: HomeView,
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: "/about",
+    name: "about",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   {
-    path: '/hello',
-    name: 'hello',
-    component: HelloView
+    path: "/hello",
+    name: "hello",
+    component: HelloView,
   },
   {
     path: "/login",
@@ -42,55 +43,55 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/userboard",
-    component: UserBoard
+    component: UserBoard,
   },
   {
     path: "/dashboard",
-    component: DashboardView
+    component: DashboardView,
   },
   {
-    path: '/activity',
-    redirect: '/activity/types',
+    path: "/activity",
+    redirect: "/activity/types",
     children: [
       {
-        path: 'sessions',
+        path: "sessions",
         component: SessionView,
       },
       {
-        path: 'sessions/create',
-        component: CreateSessionView
+        path: "sessions/create",
+        component: CreateSessionView,
       },
       {
-        path: 'sessions/edit/:id',
-        component: EditSessionView
+        path: "sessions/edit/:id",
+        component: EditSessionView,
       },
       {
-        path: 'types',
-        component: ActivityTypeView
+        path: "types",
+        component: ActivityTypeView,
       },
       {
-        path: 'groups',
-        component: ActivityGroupView
-      }
-    ]
+        path: "groups",
+        component: ActivityGroupView,
+      },
+    ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/', '/login', '/register', '/home', '/hello', '/about'];
+  const publicPages = ["/", "/login", "/register", "/home", "/hello", "/about"];
   const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
+  const loggedIn = localStorage.getItem("user");
 
   if (authRequired && !loggedIn) {
-    next('/login');
+    next("/login");
   } else {
     next();
   }
 });
 
-export default router
+export default router;

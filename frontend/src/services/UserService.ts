@@ -1,23 +1,23 @@
-import axios from 'axios';
-import authHeader from './auth-header';
+import axios from "axios";
+import authHeader from "./auth-header";
 
 //const API_AUTH_URL = import.meta.env.VITE_BACKEND_API_URL + "auth/";
 const API_AUTH_URL = "http://localhost:8098/api/test/";
 
 class UserService {
   getPublicContent() {
-    return axios.get(API_AUTH_URL + 'all');
+    return axios.get(API_AUTH_URL + "all");
   }
 
   getUserBoard() {
-    return axios.get(API_AUTH_URL + 'user', { 
-        headers: authHeader() 
+    return axios.get(API_AUTH_URL + "user", {
+      headers: authHeader(),
     });
   }
 
   getAdminBoard() {
-    return axios.get(API_AUTH_URL + 'admin', { 
-        headers: authHeader()
+    return axios.get(API_AUTH_URL + "admin", {
+      headers: authHeader(),
     });
   }
 }

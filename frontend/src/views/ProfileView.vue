@@ -15,5 +15,5 @@ import SideMenu from '@/components/menu/SideNav.vue';
     UserProfile,
   },
 })
-export default class ProfileView extends Vue {}
+export default class ProfileView extends Vue { }
 </script>

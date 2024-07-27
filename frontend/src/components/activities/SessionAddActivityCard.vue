@@ -1,23 +1,25 @@
 <template>
-    <div class="p-fluid">
-        <SelectButton class="w-full" v-model="selectedOption" :options="selectOptions" optionLabel="name" />
+  <div class="p-fluid">
+    <SelectButton class="w-full" v-model="selectedOption" :options="selectOptions" optionLabel="name" />
+  </div>
+  <div v-if="selectedOption.value == 'add-activity'" class="p-fluid flex flex-col">
+    <label for="activity" class="my-4 font-bold mx-auto">choose activities</label>
+    <Listbox v-model="selectedActivities" :options="activityTypes" multiple optionLabel="name"
+      class="w-full md:w-96 mx-auto" />
+    <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
+      <Button type="submit" label="Add" class="" @click="$emit('add-activities', selectedActivities)"></Button>
+      <Button type="button" label="Cancel" text severity="secondary" @click="$emit('closeModal')"></Button>
     </div>
-    <div v-if="selectedOption.value == 'add-activity'" class="p-fluid flex flex-col">
-      <label for="activity" class="my-4 font-bold mx-auto">choose activities</label>
-      <Listbox v-model="selectedActivities" :options="activityTypes" multiple optionLabel="name" class="w-full md:w-96 mx-auto" />
-      <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
-        <Button type="submit" label="Add" class="" @click="$emit('add-activities', selectedActivities)"></Button>
-        <Button type="button" label="Cancel" text severity="secondary" @click="$emit('closeModal')"></Button>
-      </div>
+  </div>
+  <div v-else class="p-fluid flex flex-col">
+    <label for="activityGroup" class="my-4 font-bold mx-auto">choose activity group</label>
+    <Listbox v-model="selectedActivityGroup" :options="activityGroups" optionLabel="name"
+      class="w-full md:w-96 mx-auto" />
+    <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
+      <Button type="submit" label="Add" class="" @click="$emit('add-activity-group', selectedActivityGroup)"></Button>
+      <Button class="" type="button" text label="Cancel" severity="secondary" @click="$emit('closeModal')"></Button>
     </div>
-    <div v-else class="p-fluid flex flex-col">
-      <label for="activityGroup" class="my-4 font-bold mx-auto">choose activity group</label>
-      <Listbox v-model="selectedActivityGroup" :options="activityGroups" optionLabel="name" class="w-full md:w-96 mx-auto" />
-      <div class="md:px-32 mt-10 mb-4 flex flex-col justify-end gap-2">
-        <Button type="submit" label="Add" class="" @click="$emit('add-activity-group', selectedActivityGroup)"></Button>
-        <Button class="" type="button" text label="Cancel" severity="secondary" @click="$emit('closeModal')"></Button>
-      </div>
-    </div>
+  </div>
 </template>
 
 <script setup>
@@ -42,6 +44,6 @@ const selectedActivities = ref([]);
 
 <style>
 .p-togglebutton.p-component {
-    width: 50%;
+  width: 50%;
 }
 </style>

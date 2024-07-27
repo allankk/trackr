@@ -16,7 +16,7 @@ export default {
     fetch("/api/hello")
       .then((response) => response.text())
       .then((data) => {
-          this.msg = data;
+        this.msg = data;
       });
   }
 }

@@ -7,7 +7,7 @@
                 <span class="font-bold">new session</span>
             </Button>
         </router-link>
-        <SessionList />    
+        <SessionList />
     </div>
 </template>
 

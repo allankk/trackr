@@ -1,49 +1,41 @@
 <template>
-    <div class="activity-type mx-auto max-w-5xl bg-white">
-        <div class="bg-white px-2 md:px-10 py-4 rounded-xl shadow-sm grid grid-cols-10 relative">
-            <div class="flex text-left flex-col md:flex-row col-span-10 md:col-span-2">
-              <span class="text-left font-bold text-xl my-2 md:my-auto mx-auto md:mx-0">{{ activity.name }}</span>
-            </div>
-            <div class="flex flex-col gap-y-4 px-2 col-span-10 md:col-span-6">
-              <div v-for="metric in activity.metrics" :key="metric.id" class="flex flex-col items-center">
-                <label :for="'metricvalue' + metric.id">{{ metric.name }}</label>
-                <InputGroup :name="'metricvalue-' + metric.id" class="flex justify-center relative mt-2 max-h-10 w-60 max-w-60">
-                  <InputNumber
-                    :id="'metric-' + metric.id"
-                    v-model="metric.value"
-                    :useGrouping="false"
-                    :maxFractionDigits="2"
-                    class="w-full h-10 "
-                  />
-                  <InputGroupAddon class="absolute border-none p-0">
-                    <Select
-                      v-model="metric.selectedUnit"
-                      :options="metric.units"
-                      optionLabel="unit"
-                      placeholder="Select"
-                      class="max-h-10 max-w-24 border-none"
-                    />
-                  </InputGroupAddon>
-                </InputGroup>
-              </div>
-            </div>
-            <div class="flex items-center ml-auto col-span-2 absolute md:static right-2 top-4">
-              <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2" @click="openConfirmation(activity)" />
-            </div>
+  <div class="activity-type mx-auto max-w-5xl bg-white">
+    <div class="bg-white px-2 md:px-10 py-4 rounded-xl shadow-sm grid grid-cols-10 relative">
+      <div class="flex text-left flex-col md:flex-row col-span-10 md:col-span-2">
+        <span class="text-left font-bold text-xl my-2 md:my-auto mx-auto md:mx-0">{{ activity.name }}</span>
+      </div>
+      <div class="flex flex-col gap-y-4 px-2 col-span-10 md:col-span-6">
+        <div v-for="metric in activity.metrics" :key="metric.id" class="flex flex-col items-center">
+          <label :for="'metricvalue' + metric.id">{{ metric.name }}</label>
+          <InputGroup :name="'metricvalue-' + metric.id"
+            class="flex justify-center relative mt-2 max-h-10 w-60 max-w-60">
+            <InputNumber :id="'metric-' + metric.id" v-model="metric.value" :useGrouping="false" :maxFractionDigits="2"
+              class="w-full h-10 " />
+            <InputGroupAddon class="absolute border-none p-0">
+              <Select v-model="metric.selectedUnit" :options="metric.units" optionLabel="unit" placeholder="Select"
+                class="max-h-10 max-w-24 border-none" />
+            </InputGroupAddon>
+          </InputGroup>
         </div>
+      </div>
+      <div class="flex items-center ml-auto col-span-2 absolute md:static right-2 top-4">
+        <Button icon="pi pi-times" severity="secondary" rounded outlined class="mx-2"
+          @click="openConfirmation(activity)" />
+      </div>
     </div>
-    <div>
+  </div>
+  <div>
+  </div>
+  <Dialog header="Confirmation" v-model:visible="displayConfirmation" class="w-screen md:w-1/2 2xl:w-1/4" :modal="true">
+    <div class="flex align-items-center justify-content-center">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+      <span>Remove activity from session?</span>
     </div>
-    <Dialog header="Confirmation" v-model:visible="displayConfirmation" class="w-screen md:w-1/2 2xl:w-1/4" :modal="true">
-        <div class="flex align-items-center justify-content-center">
-            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-            <span>Remove activity from session?</span>
-        </div>
-        <template #footer>
-            <Button label="Cancel" raised @click="closeConfirmation" class="mx-4" />
-            <Button label="Delete" text raised @click="removeActivity()" class="mr-4" />
-        </template>
-    </Dialog>
+    <template #footer>
+      <Button label="Cancel" raised @click="closeConfirmation" class="mx-4" />
+      <Button label="Delete" text raised @click="removeActivity()" class="mr-4" />
+    </template>
+  </Dialog>
 </template>
 
 <script setup>
@@ -67,7 +59,7 @@ activity.value.metrics.forEach(metric => {
   if (metric.selectedUnit && metric.selectedUnit.id) {
     metric.selectedUnit = metric.units.find(unit => unit.id === metric.selectedUnit.id) || metric.units[0];
   } else {
-    metric.selectedUnit = metric.units[0]; 
+    metric.selectedUnit = metric.units[0];
   }
 
   if (!metric.selectedUnit) {
@@ -115,7 +107,7 @@ const removeActivity = () => {
   width: 5rem;
   position: absolute;
   right: 0.25rem;
-  padding-right:0.25rem;
+  padding-right: 0.25rem;
   z-index: 5;
 }
 

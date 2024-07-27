@@ -9,5 +9,4 @@
 <script setup>
 import ActivityCalendar from '@/components/dashboard/ActivityCalendar';
 import StatisticsGraph from '@/components/dashboard/StatisticsGraph.vue';
-
 </script>

@@ -1,30 +1,34 @@
 <template>
   <div class="exercise-form p-fluid">
     <div class="mx-auto max-w-2xl">
-      <Form @submit="updateData" :initial-values="initialValues" :validation-schema="schema" class="p-fluid" validateOnChange="false" validateOnBlur="false" validateOnInput="false" validateOnModelUpdate="false">
-        <Field name="name" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false :validateOnModelUpdate=false>
+      <Form @submit="updateData" :initial-values="initialValues" :validation-schema="schema" class="p-fluid"
+        validateOnChange="false" validateOnBlur="false" validateOnInput="false" validateOnModelUpdate="false">
+        <Field name="name" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false
+          :validateOnModelUpdate=false>
           <div class="field my-4 relative">
-              <label for="name1">Name</label>
-              <InputText v-model="name" v-bind="field" id="name" type="text" />
-              <div class="absolute right-0 top-16">
-                <ErrorMessage name="name" class="text-xs text-red-500 pr-4"></ErrorMessage>
-              </div>
+            <label for="name1">Name</label>
+            <InputText v-model="name" v-bind="field" id="name" type="text" />
+            <div class="absolute right-0 top-16">
+              <ErrorMessage name="name" class="text-xs text-red-500 pr-4"></ErrorMessage>
+            </div>
           </div>
         </Field>
-        <Field name="description" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false :validateOnModelUpdate=false>
+        <Field name="description" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false
+          :validateOnModelUpdate=false>
           <div class="field my-4">
-              <label for="description">Description</label>
-              <InputText v-model="description" v-bind="field" id="description" type="text" />
+            <label for="description">Description</label>
+            <InputText v-model="description" v-bind="field" id="description" type="text" />
           </div>
         </Field>
-        <Field name="activityTypes" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false :validateOnModelUpdate=false>
+        <Field name="activityTypes" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true
+          :validateOnInput=false :validateOnModelUpdate=false>
           <div class="field my-4 relative">
-              <label for="activityTypes">Activity Types</label>
-              <MultiSelect v-bind="field" v-model="activityTypes" display="chip" :options="dropdownItems" optionLabel="name" placeholder="Select Activities"
-              :maxSelectedLabels="6" class="w-full" />
-              <div class="absolute right-0 top-16">
-                <span class="text-xs text-red-500 pr-4">{{ activityTypesError }}</span>
-              </div>
+            <label for="activityTypes">Activity Types</label>
+            <MultiSelect v-bind="field" v-model="activityTypes" display="chip" :options="dropdownItems"
+              optionLabel="name" placeholder="Select Activities" :maxSelectedLabels="6" class="w-full" />
+            <div class="absolute right-0 top-16">
+              <span class="text-xs text-red-500 pr-4">{{ activityTypesError }}</span>
+            </div>
           </div>
         </Field>
         <div class="mt-10 mb-4 flex justify-end gap-2">
@@ -74,8 +78,8 @@ const schema = yup.object().shape({
 const updateData = () => {
   if (activityTypes.value.length === 0) {
     console.log('error');
-    activityTypesError.value = 'At least 1 activity is required'; 
-    return; 
+    activityTypesError.value = 'At least 1 activity is required';
+    return;
   } else {
     activityTypesError.value = '';
   }
@@ -115,5 +119,4 @@ onMounted(() => {
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

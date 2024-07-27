@@ -5,11 +5,11 @@
             <i class="pi pi-fw pi-plus"></i>
             <span class="font-bold">create activity group</span>
         </Button>
-        <Dialog header="add activity group" class="w-full md:w-1/2 lg:w-1/3 absolute md:static top-20" v-model:visible="visible" 
-         :modal="true" :draggable="false">
-            <ActivityGroupAddCard :visible="visible" @closeModal="closedModal"/>
+        <Dialog header="add activity group" class="w-full md:w-1/2 lg:w-1/3 absolute md:static top-20"
+            v-model:visible="visible" :modal="true" :draggable="false">
+            <ActivityGroupAddCard :visible="visible" @closeModal="closedModal" />
         </Dialog>
-        <ActivityGroupList :key="groupListKey" />    
+        <ActivityGroupList :key="groupListKey" />
     </div>
 </template>
 
