@@ -77,7 +77,7 @@ const schema = yup.object().shape({
 
 const updateData = () => {
   if (activityTypes.value.length === 0) {
-    console.log('error');
+    console.log('error updating data');
     activityTypesError.value = 'At least 1 activity is required';
     return;
   } else {
@@ -95,7 +95,7 @@ const updateData = () => {
       emit('closeModal');
     },
     (error) => {
-      console.log('error' + error.toString());
+      console.log(error);
     }
   )
 }
@@ -111,7 +111,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log('error: ' + error.toString());
+      console.log(error);
     }
   )
 });

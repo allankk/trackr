@@ -76,11 +76,11 @@ const saveData = () => {
   }
 
   ActivityGroupService.addActivityGroup(activityGroupData).then(
-    (response) => {
+    () => {
       emit('closeModal');
     },
     (error) => {
-      console.log('error' + error.toString());
+      console.log(error);
     }
   )
 }
@@ -96,7 +96,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log('error: ' + error.toString());
+      console.log(error);
     }
   )
 });

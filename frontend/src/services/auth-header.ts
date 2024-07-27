@@ -1,7 +1,10 @@
+import { useStore } from 'vuex';
+import { isTokenExpired } from '@/services/auth-utils';
+
 export default function authHeader(): { Authorization?: string } {
+  const store = useStore();
   const storedUser = localStorage.getItem("user");
 
-  // Check if storedUser is a non-empty string before parsing
   let user: { accessToken?: string } | null = null;
   if (storedUser) {
     try {
@@ -11,10 +14,11 @@ export default function authHeader(): { Authorization?: string } {
     }
   }
 
-  // Return authorization header if user and accessToken are available
-  if (user && user.accessToken) {
+  if (user && user.accessToken && !isTokenExpired(user.accessToken)) {
     return { Authorization: "Bearer: " + user.accessToken };
   } else {
+    localStorage.removeItem("user");
+    store.dispatch('auth/logout');
     return {};
   }
 }

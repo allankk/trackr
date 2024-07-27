@@ -76,8 +76,7 @@ const deleteActivityGroup = () => {
       getAllActivityGroups();
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   )
 
@@ -96,8 +95,7 @@ const getAllActivityGroups = () => {
       activityGroups.value = response.data;
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   ).finally(() => {
     loading.value = false;

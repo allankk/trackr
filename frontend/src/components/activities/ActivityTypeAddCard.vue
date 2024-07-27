@@ -68,11 +68,11 @@ const saveData = () => {
   }
 
   ActivityService.addActivityType(activityTypeData).then(
-    (response) => {
+    () => {
       emit('closeModal');
     },
     (error) => {
-      console.log('error' + error.toString());
+      console.log(error);
     }
   )
 }
@@ -88,7 +88,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log('error: ' + error.toString());
+      console.log(error);
     }
   )
 });

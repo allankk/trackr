@@ -121,8 +121,7 @@ const deleteSession = () => {
       fetchSessions();
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   )
 
@@ -151,8 +150,7 @@ const fetchSessions = () => {
       sortSessions();
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   ).finally(() => {
     loading.value = false;
@@ -166,8 +164,7 @@ const fetchActivityTypes = () => {
       activityTypes.value = response.data;
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   );
 };

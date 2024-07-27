@@ -65,8 +65,6 @@ const getMetrics = () => {
 
 const getUnits = () => {
   if (selectedMetric.value) {
-    console.log('selec met');
-    console.log(selectedMetric.value);
     units.value = selectedMetric.value.units;
     selectedUnit.value = units.value[0];
     getActivityResults();
@@ -76,9 +74,6 @@ const getUnits = () => {
 const getActivityResults = async () => {
   DashboardService.getActivityResults(selectedActivityType.value.id, selectedMetric.value.id, selectedUnit.value.id).then(
     (response) => {
-      console.log('result');
-      console.log(response.data);
-
       lineData.labels = ['January', 'February', 'March']
 
       lineData.labels = response.data.dates.map(d => moment(new Date(d)).format('DD.MM.yyyy'));
@@ -94,7 +89,7 @@ const getActivityResults = async () => {
       ];
     },
     (error) => {
-      console.error(error);
+      console.log(error);
     }
   )
 }
@@ -102,13 +97,12 @@ const getActivityResults = async () => {
 onMounted(() => {
   ActivityService.getAllActivities().then(
     (response) => {
-      console.log(response.data);
       activityTypes.value = response.data;
       selectedActivityType.value = activityTypes.value[0];
       getMetrics();
     },
     (error) => {
-      console.error(error);
+      console.log(error);
     }
 
   )

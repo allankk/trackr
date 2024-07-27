@@ -77,8 +77,7 @@ const deleteActivity = () => {
       getAllActivities();
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   )
 
@@ -97,8 +96,7 @@ const getAllActivities = () => {
       activityTypes.value = response.data;
     },
     (error) => {
-      console.log('error');
-      console.log(error.toString());
+      console.log(error);
     }
   ).finally(() => {
     loading.value = false;

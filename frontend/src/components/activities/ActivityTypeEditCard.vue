@@ -78,7 +78,7 @@ const updateData = () => {
   const rawMetrics = toRaw(metrics.value).map(item => toRaw(item));
 
   if (rawMetrics.length === 0) {
-    console.log('error');
+    console.log('error updating data');
     metricsError.value = 'At least 1 metric is required';
     return;
   } else {
@@ -92,11 +92,11 @@ const updateData = () => {
   }
 
   ActivityService.updateActivityType(props.activity.id, activityTypeData).then(
-    (response) => {
+    () => {
       emit('closeModal');
     },
     (error) => {
-      console.log('error' + error.toString());
+      console.log(error);
     }
   )
 }
@@ -112,7 +112,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log('error: ' + error.toString());
+      console.log(error);
     }
   )
 });

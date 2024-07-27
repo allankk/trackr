@@ -117,7 +117,6 @@ const handleAddActivities = (selectedActivities) => {
 };
 
 const handleRemoveActivity = (activity) => {
-  console.log(addedActivities);
   addedActivities.value = addedActivities.value.filter(x => x.id !== activity.id);
 }
 
@@ -152,7 +151,6 @@ const submitForm = () => {
       }
     },
     (error) => {
-      console.log('error');
       console.log(error);
     }
   );
