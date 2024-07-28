@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 //const API_AUTH_URL = import.meta.env.VITE_BACKEND_API_URL + "auth/";
-const API_AUTH_URL = "http://localhost:8098/api/test/";
+const API_AUTH_URL = "http://localhost:8098/api/user/";
 
 class UserService {
   getPublicContent() {

@@ -6,9 +6,10 @@ axios.interceptors.response.use(
   error => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('user');
-
       router.push('/login');
+      error.message = 'Unauthorized, please login';
     }
-    return Promise.reject('Unauthorized.'); 
+
+    return Promise.reject(error); 
   }
 );

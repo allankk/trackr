@@ -9,7 +9,6 @@ import ActivityGroupView from "../views/ActivityGroupView.vue";
 import SessionView from "../views/SessionView.vue";
 import CreateSessionView from "../views/CreateSessionView.vue";
 import EditSessionView from "../views/EditSessionView.vue";
-import UserBoard from "../components/UserBoard.vue";
 import DashboardView from "../views/DashboardView.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -40,10 +39,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/profile",
     component: ProfileView,
-  },
-  {
-    path: "/userboard",
-    component: UserBoard,
   },
   {
     path: "/dashboard",

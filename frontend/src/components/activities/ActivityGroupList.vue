@@ -41,6 +41,9 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
 import { onMounted, ref } from 'vue';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const activityGroups = ref([]);
 const activeGroup = ref(null);
@@ -72,11 +75,11 @@ const closeConfirmation = () => {
 
 const deleteActivityGroup = () => {
   ActivityGroupService.deleteActivityGroup(activeGroup.value.id).then(
-    (success) => {
+    () => {
       getAllActivityGroups();
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to delete group', life: 3000 });
     }
   )
 
@@ -95,7 +98,7 @@ const getAllActivityGroups = () => {
       activityGroups.value = response.data;
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve groups', life: 3000 });
     }
   ).finally(() => {
     loading.value = false;

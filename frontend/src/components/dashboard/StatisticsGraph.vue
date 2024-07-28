@@ -1,20 +1,20 @@
 <template>
   <div class="chart-container w-full md:max-w-7xl p-4 mx-auto">
     <div class="bg-white p-4 w-full shadow-lg mx-auto">
-      <div class="text-lg font-bold mb-4">activity statistics</div>
+      <div class="text-lg font-bold mb-4">Activity Statistics</div>
       <div class="w-full flex flex-col md:flex-row justify-center mb-4 md:flex-1 md:mr-4">
         <div class="flex flex-col my-2 text-left md:text-center">
-          <div class="mb-2 italic">activity</div>
+          <div class="mb-2 italic">Activity</div>
           <Select v-model="selectedActivityType" :options="activityTypes" optionLabel="name"
             placeholder="Select Activity" class="md:max-w-60 min-w-40 mx-4 text-left" @change="getMetrics" />
         </div>
         <div class="flex flex-col my-2">
-          <div class="mb-2 italic text-left md:text-center">metric</div>
+          <div class="mb-2 italic text-left md:text-center">Metric</div>
           <Select v-model="selectedMetric" :options="metrics" optionLabel="name" placeholder="Select Metric"
             class="md:max-w-60 min-w-40 mx-4 text-left" @change="getUnits" />
         </div>
         <div class="flex flex-col my-2">
-          <div class="mb-2 italic text-left md:text-center">unit</div>
+          <div class="mb-2 italic text-left md:text-center">Unit</div>
           <Select v-model="selectedUnit" :options="units" optionLabel="name" placeholder="Select Unit"
             class="md:max-w-60 min-w-40 mx-4 text-left" @change="getActivityResults" />
         </div>
@@ -31,6 +31,9 @@ import DashboardService from '@/services/DashboardService.ts';
 import moment from 'moment';
 import Select from 'primevue/select';
 import Chart from 'primevue/chart';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const activityTypes = ref([]);
 const selectedActivityType = ref(null);
@@ -49,7 +52,7 @@ const lineOptions = {
     legend: {
       display: false,
     }
-  }
+  },
 }
 
 const getMetrics = () => {
@@ -89,7 +92,7 @@ const getActivityResults = async () => {
       ];
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve sessions', life: 3000 });
     }
   )
 }
@@ -102,13 +105,12 @@ onMounted(() => {
       getMetrics();
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve activities', life: 3000 });
     }
 
   )
 
 })
-
 </script>
 
 <style scoped>

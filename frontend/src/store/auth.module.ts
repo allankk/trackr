@@ -40,9 +40,17 @@ export const auth = {
     },
     register({ commit }: { commit: Commit }, user: User) {
       return AuthService.register(user.email, user.password).then(
-        (response) => {
-          commit("registerSuccess");
-          return Promise.resolve(response.data);
+        () => {
+          return AuthService.login(user.email, user.password).then(
+            (user) => {
+              commit("loginSuccess", user);
+              return Promise.resolve(user);
+            },
+            (error) => {
+              commit("loginFailure");
+              return Promise.reject(error);
+            }
+          );
         },
         (error) => {
           commit("registerFailure");
@@ -65,7 +73,7 @@ export const auth = {
       state.user = null;
     },
     registerSuccess(state: AuthState) {
-      state.status.loggedIn = false;
+      state.status.loggedIn = true;
     },
     registerFailure(state: AuthState) {
       state.status.loggedIn = false;

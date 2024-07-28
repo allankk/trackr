@@ -49,6 +49,9 @@ import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import ActivityService from '@/services/ActivityService';
 import ActivityGroupService from '@/services/ActivityGroupService';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const emit = defineEmits(['closeModal'])
 const dropdownItems = ref([]);
@@ -77,10 +80,11 @@ const saveData = () => {
 
   ActivityGroupService.addActivityGroup(activityGroupData).then(
     () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Activity group added', life: 3000 });
       emit('closeModal');
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to add activity group', life: 3000 });
     }
   )
 }
@@ -96,7 +100,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve activities', life: 3000 });
     }
   )
 });

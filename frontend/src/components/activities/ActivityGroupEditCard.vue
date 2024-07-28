@@ -49,6 +49,9 @@ import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import ActivityGroupService from '@/services/ActivityGroupService';
 import ActivityService from '@/services/ActivityService';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const props = defineProps(['activityGroup', 'visible']);
 const emit = defineEmits(['closeModal'])
@@ -77,7 +80,6 @@ const schema = yup.object().shape({
 
 const updateData = () => {
   if (activityTypes.value.length === 0) {
-    console.log('error updating data');
     activityTypesError.value = 'At least 1 activity is required';
     return;
   } else {
@@ -91,11 +93,12 @@ const updateData = () => {
   }
 
   ActivityGroupService.updateActivityGroup(props.activityGroup.id, activityGroupData).then(
-    (response) => {
+    () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Activity group updated', life: 3000 });
       emit('closeModal');
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to update group', life: 3000 });
     }
   )
 }
@@ -111,7 +114,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve activities', life: 3000 });
     }
   )
 });

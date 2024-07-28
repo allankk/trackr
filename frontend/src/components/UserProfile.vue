@@ -1,37 +1,53 @@
 <template>
-  <div class="container" v-if="currentUser">
-    <header class="jumbotron">
-      <h3>
-        <strong>{{ currentUser.username }}</strong> Profile
-      </h3>
-    </header>
-    <p>
-      <strong>Id:</strong>
-      {{ currentUser.id }}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{ currentUser.email }}
-    </p>
-    <strong>Authorities:</strong>
-    <ul>
-      <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
-    </ul>
+  <div class="flex flex-col items-center justify-center">
+    <span class="text-red-500 italic mb-6">Changing user details is not available yet</span>
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+      <div class="flex flex-col items-center">
+        <Avatar :label="avatarLabel" class="mr-2" size="xlarge" />
+        <h2 class="text-xl font-semibold mb-2">User Profile</h2>
+        <div class="px-10 w-full">
+          <p class="text-gray-600 mb-4 w-full flex justify-between">
+            <strong>Email</strong> {{ content.email }}
+          </p>
+          <p class="text-gray-600 w-full flex justify-between"><strong>Role</strong> {{ content.role }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserProfile',
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import UserService from "@/services/UserService";
+import Avatar from "primevue/avatar";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
+const content = ref({});
+
+const avatarLabel = computed(() => {
+  return content.value.email ? content.value.email.charAt(0).toUpperCase() : "";
+});
+
+onMounted(() => {
+  UserService.getUserBoard().then(
+    (response) => {
+      content.value = response.data;
+    },
+    (error) => {
+      content.value = {
+        email: "",
+        role: "",
+      };
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: error.message || "Failed to retrieve user info",
+        life: 3000,
+      });
     }
-  },
-  mounted() {
-    if (!this.currentUser) {
-      this.$router.push('/login');
-    }
-  }
-};
+  );
+});
 </script>
+
+<style scoped></style>

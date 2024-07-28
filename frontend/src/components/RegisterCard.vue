@@ -10,8 +10,8 @@
             <i class="pi pi-user"></i>
           </InputGroupAddon>
           <FloatLabel>
-            <Field name="email" v-slot="{ field }" :validateOnChange=false :validateOnBlur=true :validateOnInput=false
-              :validateOnModelUpdate=false>
+            <Field name="email" v-slot="{ field }" :validateOnChange="false" :validateOnBlur="true"
+              :validateOnInput="false" :validateOnModelUpdate="false">
               <InputText v-model="email" v-bind="field" id="email" class="input"></InputText>
             </Field>
             <label for="email">email</label>
@@ -25,8 +25,8 @@
             <i class="pi pi-lock"></i>
           </InputGroupAddon>
           <FloatLabel>
-            <Field name="password" v-slot="{ field }" :validateOnChange="false" :validateOnBlur=true
-              :validateOnInput="false" :validateOnModelUpdate=false>
+            <Field name="password" v-slot="{ field }" :validateOnChange="false" :validateOnBlur="true"
+              :validateOnInput="false" :validateOnModelUpdate="false">
               <Password v-model="password" v-bind="field" id="password" class="input no-left-border-radius"
                 :feedback="false" toggleMask></Password>
             </Field>
@@ -57,7 +57,8 @@
         </div>
         <Button type="submit" label="Sign up" class="w-full mt-4" :loading="loading"></Button>
       </Form>
-      <div class="mt-6 text-sm">Already have an account?
+      <div class="mt-6 text-sm">
+        Already have an account?
         <Button as="router-link" link label="Sign in" to="/login"
           class="text-sm hover:transition-all text-green-500 font-bold hover:text-green-700" unstyled></Button>
       </div>
@@ -65,79 +66,63 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
-import FloatLabel from 'primevue/floatlabel';
-import Button from 'primevue/button';
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
+import InputText from "primevue/inputtext";
+import Password from "primevue/password";
+import FloatLabel from "primevue/floatlabel";
+import Button from "primevue/button";
+import InputGroup from "primevue/inputgroup";
+import InputGroupAddon from "primevue/inputgroupaddon";
+import { useToast } from 'primevue/usetoast';
 
-export default {
-  name: "RegisterCard",
-  components: {
-    Form,
-    ErrorMessage,
-    Field,
-    InputText,
-    FloatLabel,
-    Button,
-    InputGroup,
-    InputGroupAddon,
-    Password
-  },
-  data() {
-    const schema = yup.object().shape({
-      email: yup.string().required().email(),
-      password: yup.string().required().min(8),
-      confirmPassword: yup.string().required("Confirming password is required").oneOf([yup.ref('password')], 'Passwords do not match')
-    });
+const toast = useToast();
 
-    return {
-      email: "",
-      password: "",
-      loading: false,
-      message: "",
-      schema,
-    };
-  },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
+const email = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+const loading = ref(false);
+const message = ref("");
+
+const schema = yup.object().shape({
+  email: yup.string().required().email(),
+  password: yup.string().required().min(8),
+  confirmPassword: yup
+    .string()
+    .required("Confirming password is required")
+    .oneOf([yup.ref("password")], "Passwords do not match"),
+});
+
+const store = useStore();
+const router = useRouter();
+
+const loggedIn = computed(() => store.state.auth.status.loggedIn);
+
+onMounted(() => {
+  if (loggedIn.value) {
+    router.push("/profile");
+  }
+});
+
+const handleRegister = (user) => {
+  loading.value = true;
+
+  store.dispatch("auth/register", user).then(
+    (response) => {
+      loading.value = false;
+      message.value = response.message;
+
+      router.push("/profile");
     },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
+    (error) => {
+      loading.value = false;
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to Register', life: 3000 });
     }
-  },
-  methods: {
-    handleRegister(user) {
-      this.loading = true;
-
-      this.$store.dispatch("auth/register", user).then(
-        (data) => {
-          this.message = data.message;
-          this.$router.push("/profile");
-        },
-        (error) => {
-          this.loading = false;
-          if (error.response.status == 401) {
-            this.message = "Invalid credentials";
-          } else {
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-          }
-        }
-      );
-    },
-  },
+  );
 };
 </script>
 

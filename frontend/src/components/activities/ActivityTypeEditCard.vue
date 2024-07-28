@@ -48,6 +48,9 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import ActivityService from '@/services/ActivityService';
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 
 const props = defineProps(['activity', 'visible']);
 const emit = defineEmits(['closeModal'])
@@ -78,7 +81,6 @@ const updateData = () => {
   const rawMetrics = toRaw(metrics.value).map(item => toRaw(item));
 
   if (rawMetrics.length === 0) {
-    console.log('error updating data');
     metricsError.value = 'At least 1 metric is required';
     return;
   } else {
@@ -93,10 +95,11 @@ const updateData = () => {
 
   ActivityService.updateActivityType(props.activity.id, activityTypeData).then(
     () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Activity updated', life: 3000 });
       emit('closeModal');
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to update activity', life: 3000 });
     }
   )
 }
@@ -112,7 +115,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve metrics', life: 3000 });
     }
   )
 });

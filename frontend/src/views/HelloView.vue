@@ -4,20 +4,16 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HelloView',
-  data() {
-    return {
-      msg: ''
-    }
-  },
-  mounted() {
-    fetch("/api/hello")
-      .then((response) => response.text())
-      .then((data) => {
-        this.msg = data;
-      });
-  }
-}
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const msg = ref('');
+
+onMounted(() => {
+  fetch("/api/hello")
+    .then((response) => response.text())
+    .then((data) => {
+      msg.value = data;
+    });
+});
 </script>

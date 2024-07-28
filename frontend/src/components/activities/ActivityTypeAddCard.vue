@@ -48,6 +48,9 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import ActivityService from '@/services/ActivityService';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const emit = defineEmits(['closeModal'])
 const dropdownItems = ref([]);
@@ -69,10 +72,11 @@ const saveData = () => {
 
   ActivityService.addActivityType(activityTypeData).then(
     () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Activity added', life: 3000 });
       emit('closeModal');
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to add activity', life: 3000 });
     }
   )
 }
@@ -88,7 +92,7 @@ onMounted(() => {
       })
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error Message', detail: error.message || 'Activity failed to delete', life: 3000 });
     }
   )
 });

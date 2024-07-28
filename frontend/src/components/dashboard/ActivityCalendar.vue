@@ -16,6 +16,9 @@ import { onMounted, ref, watch } from 'vue';
 import DashboardService from '@/services/DashboardService';
 import SessionSummary from '@/components/dashboard/SessionSummary.vue';
 import DatePicker from 'primevue/datepicker';
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 
 const selectedDate = ref(null);
 const sessionDates = ref([]);
@@ -54,7 +57,7 @@ onMounted(() => {
       }
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve session dates', life: 3000 });
     }
   );
 })
@@ -68,7 +71,7 @@ watch(selectedDate, async (newDate) => {
       loading.value = false;
 
     } catch (error) {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve session', life: 3000 });
       sessionSummary.value = [];
     }
   } else {

@@ -4,7 +4,8 @@
     <div>
       <SideNav />
     </div>
-    <div class="layout-main-container">
+    <div class="layout-main-container relative">
+      <Toast class="mt-14 xl:mr-20" />
       <div class="layout-main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
@@ -21,6 +22,7 @@ import { useLayout } from '@/components/menu/menuLayout';
 import { computed, watch, ref } from 'vue';
 import TopNav from './components/menu/TopNav.vue';
 import SideNav from './components/menu/SideNav.vue';
+import Toast from 'primevue/toast';
 
 const { layoutState, isSidebarActive } = useLayout();
 const outsideClickListener = ref(null);

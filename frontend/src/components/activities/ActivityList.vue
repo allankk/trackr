@@ -42,6 +42,9 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner  from 'primevue/progressspinner';
 import { onMounted, ref } from 'vue';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const activityTypes = ref('');
 const activeType = ref(null);
@@ -73,11 +76,12 @@ const closeConfirmation = () => {
 
 const deleteActivity = () => {
   ActivityService.deleteActivityType(activeType.value.id).then(
-    (response) => {
+    () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Activity deleted', life: 3000 });
       getAllActivities();
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to delete activity', life: 3000 });
     }
   )
 
@@ -96,7 +100,7 @@ const getAllActivities = () => {
       activityTypes.value = response.data;
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error Message', detail: error.message || 'Failed to retrieve activities', life: 3000 });
     }
   ).finally(() => {
     loading.value = false;

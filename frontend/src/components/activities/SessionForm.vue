@@ -53,7 +53,9 @@ import SessionActivityCard from '@/components/activities/SessionActivityCard.vue
 import ActivityService from '@/services/ActivityService';
 import ActivityGroupService from '@/services/ActivityGroupService';
 import ActivitySessionService from '@/services/ActivitySessionService';
+import { useToast } from 'primevue/usetoast';
 
+const toast = useToast();
 const router = useRouter();
 
 const activityModalVisible = ref(false);
@@ -147,11 +149,12 @@ const submitForm = () => {
   ActivitySessionService.addSession(session).then(
     (response) => {
       if (response.status == 200) {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Session added', life: 3000 });
         router.push('/activity/sessions');
       }
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to add session', life: 3000 });
     }
   );
 };

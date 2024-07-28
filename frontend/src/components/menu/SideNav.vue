@@ -40,7 +40,6 @@ const userItems = computed(() => {
     if (currentUser.value) {
         return [
             { label: 'Profile', icon: 'pi pi-fw pi-user', to: '/profile' },
-            { label: 'User Board', icon: 'pi pi-fw pi-user', to: '/userboard' },
             { label: 'Log out', icon: 'pi pi-fw pi-sign-out', action: 'logout' }
         ];
     } else {

@@ -78,6 +78,9 @@ import Dialog from 'primevue/dialog';
 import MultiSelect from 'primevue/multiselect';
 import DatePicker from 'primevue/datepicker';
 import ProgressSpinner from 'primevue/progressspinner';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const groupedSessions = ref([]);
 const activeSession = ref(null);
@@ -118,10 +121,11 @@ const toggleSortOrder = () => {
 const deleteSession = () => {
   ActivitySessionService.deleteSession(activeSession.value.id).then(
     () => {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Session deleted', life: 3000 });
       fetchSessions();
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to delete session', life: 3000 });
     }
   )
 
@@ -150,7 +154,7 @@ const fetchSessions = () => {
       sortSessions();
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve sessions', life: 3000 });
     }
   ).finally(() => {
     loading.value = false;
@@ -164,7 +168,7 @@ const fetchActivityTypes = () => {
       activityTypes.value = response.data;
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve activities', life: 3000 });
     }
   );
 };

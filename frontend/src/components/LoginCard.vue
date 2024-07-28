@@ -49,9 +49,12 @@
   </div>
 </template>
 
-<script>
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import FloatLabel from 'primevue/floatlabel';
@@ -59,67 +62,48 @@ import Button from 'primevue/button';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 
-export default {
-  name: "LoginCard",
-  components: {
-    Form,
-    ErrorMessage,
-    Field,
-    InputText,
-    FloatLabel,
-    Button,
-    InputGroup,
-    InputGroupAddon,
-    Password
-  },
-  data() {
-    const schema = yup.object().shape({
-      email: yup.string().required().email(),
-      password: yup.string().required(),
-    });
+const store = useStore();
+const router = useRouter();
 
-    return {
-      email: "",
-      password: "",
-      loading: false,
-      message: "",
-      schema,
-    };
-  },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
+const email = ref("");
+const password = ref("");
+const loading = ref(false);
+const message = ref("");
+
+const schema = yup.object().shape({
+  email: yup.string().required().email(),
+  password: yup.string().required(),
+});
+
+const loggedIn = computed(() => store.state.auth.status.loggedIn);
+
+onMounted(() => {
+  if (loggedIn.value) {
+    router.push("/profile");
+  }
+});
+
+const handleLogin = (user) => {
+  loading.value = true;
+
+  store.dispatch("auth/login", user).then(
+    () => {
+      router.push("/dashboard");
     },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
+    (error) => {
+      loading.value = false;
+      if (error.response.status == 401) {
+        message.value = "Invalid credentials";
+      } else {
+        message.value =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
     }
-  },
-  methods: {
-    handleLogin(user) {
-      this.loading = true;
-
-      this.$store.dispatch("auth/login", user).then(
-        () => {
-          this.$router.push("/profile");
-        },
-        (error) => {
-          this.loading = false;
-          if (error.response.status == 401) {
-            this.message = "Invalid credentials";
-          } else {
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-          }
-        }
-      );
-    },
-  },
+  );
 };
 </script>
 

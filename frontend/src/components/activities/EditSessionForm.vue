@@ -53,7 +53,9 @@ import SessionActivityCard from '@/components/activities/SessionActivityCard.vue
 import ActivityService from '@/services/ActivityService';
 import ActivityGroupService from '@/services/ActivityGroupService';
 import ActivitySessionService from '@/services/ActivitySessionService';
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const router = useRouter();
 const route = useRoute();
 
@@ -172,11 +174,12 @@ const submitForm = () => {
   ActivitySessionService.updateSession(route.params.id, session).then(
     (response) => {
       if (response.status == 200) {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Session updated', life: 3000 });
         router.push('/activity/sessions');
       }
     },
     (error) => {
-      console.log(error);
+      toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to update session', life: 3000 });
     }
   );
 };
