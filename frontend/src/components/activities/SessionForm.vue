@@ -58,8 +58,11 @@ import { useToast } from 'primevue/usetoast';
 const toast = useToast();
 const router = useRouter();
 
+var startDate = new Date();
+startDate.setHours(0,0,0,0)
+
 const activityModalVisible = ref(false);
-const calendarValue = ref(new Date());
+const calendarValue = ref(startDate);
 const notes = ref('');
 const activityTypes = ref([]);
 const activityGroups = ref([]);

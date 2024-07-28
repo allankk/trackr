@@ -45,6 +45,10 @@
         <Button as="router-link" link label="Sign up" to="/register"
           class="text-sm hover:transition-all text-green-500 font-bold hover:text-green-700" unstyled></Button>
       </div>
+      <div class="mt-6 text-sm">
+        <Button @click="handleDemoLogin"
+          class="text-sm hover:transition-all text-green-500 font-bold hover:text-green-700" unstyled>Log in with a demo account</Button>
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +86,11 @@ onMounted(() => {
     router.push("/profile");
   }
 });
+
+const handleDemoLogin = () => {
+  const demoCredentials = { email: 'demo@demo.com', password: 'password' };
+  handleLogin(demoCredentials);
+};
 
 const handleLogin = (user) => {
   loading.value = true;

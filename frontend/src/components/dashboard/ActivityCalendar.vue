@@ -1,13 +1,22 @@
 <template>
-  <div
+  <div v-if="sessionDates.length"
     class="w-full lg:max-w-7xl p-0 md:p-4 flex flex-col md:flex-row mx-auto justify-between items-center md:items-start">
     <div class="activity-calendar rounded-md w-full xl:w-1/3 pt-1">
       <DatePicker v-model="selectedDate" inline :pt="calendarPT"
-        class="w-full border-0 mt-12 shadow-lg min-w-72 bg-white" />
+        class="w-full border-0 mt-12 shadow-lg min-w-80 bg-white" />
     </div>
 
     <SessionSummary  :sessions="sessionSummary" :selectedDate="selectedDate" :loading="loading"
       class="w-full xl:w-1/2 2xl:w-2/3 m-2 md:mr-0" />
+  </div>
+  <div v-else>
+    <div class="font-bold text-lg mt-10">No existing sessions found</div>
+    <router-link class="px-6" to="/activity/sessions/create">
+        <Button type="button" rounded class="my-10" @click="visible = true">
+            <span class="font-bold">add new session</span>
+        </Button>
+    </router-link>
+    <Divider />
   </div>
 </template>
 
@@ -16,6 +25,8 @@ import { onMounted, ref, watch } from 'vue';
 import DashboardService from '@/services/DashboardService';
 import SessionSummary from '@/components/dashboard/SessionSummary.vue';
 import DatePicker from 'primevue/datepicker';
+import Button from 'primevue/button';
+import Divider from 'primevue/divider';
 import { useToast } from "primevue/usetoast";
 
 const toast = useToast();
@@ -45,15 +56,17 @@ onMounted(() => {
   DashboardService.getSessionDates().then(
     (response) => {
       let latestDate = null;
-      if (response.data.dates) {
+      if (response.data.dates.length) {
         sessionDates.value = response.data.dates.map(d => {
-          let date = new Date(d);
+          let date = new Date(d); 
 
           if (date > latestDate) latestDate = date;
           return date;
         });
 
         selectedDate.value = latestDate;
+      } else {
+        sessionDates.value = [];
       }
     },
     (error) => {
@@ -69,7 +82,6 @@ watch(selectedDate, async (newDate) => {
       const response = await DashboardService.getSessionByDate(newDate.toISOString());
       sessionSummary.value = response.data;
       loading.value = false;
-
     } catch (error) {
       toast.add({ severity: 'error', summary: 'Error', detail: error.message || 'Failed to retrieve session', life: 3000 });
       sessionSummary.value = [];
@@ -77,7 +89,6 @@ watch(selectedDate, async (newDate) => {
   } else {
     sessionSummary.value = [];
   }
-  
 });
 
 </script>

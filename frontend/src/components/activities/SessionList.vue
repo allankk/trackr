@@ -11,7 +11,7 @@
       </div>
       <div class="w-full mb-4 flex-1 mx-4">
         <DatePicker v-model="dateRange" selection-mode="range" showButtonBar placeholder="Select Date Range"
-          @clear-click="fetchSessions" @date-select="fetchSessions" dateFormat="dd.mm.yy"
+          @clear-click="fetchSessions" @hide="fetchSessions" dateFormat="dd.mm.yy"
           class="date-picker shadow-none w-full px-0 py-0 cursor-pointer text-center" />
       </div>
       <div class="w-full flex-1 mb-4 md:ml-4 flex items-center justify-center">

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.allank.trackr.models.Erole.ROLE_DEMO;
 import static com.allank.trackr.models.Erole.ROLE_USER;
 
 @Service
@@ -188,7 +189,9 @@ public class ActivityService {
 
             if (roleRepository.count() == 0) {
                 Role role = new Role(ROLE_USER);
+                Role demoRole = new Role(ROLE_DEMO);
                 roleRepository.save(role);
+                roleRepository.save(demoRole);
             }
 
             Role role = roleRepository.findByName(ROLE_USER).orElseThrow(() -> new EntityNotFoundException("role not found"));
@@ -198,6 +201,14 @@ public class ActivityService {
             user.setRoles(roles);
 
             userRepository.save(user);
+
+            User demoUser = new User("demo@demo.com",  encoder.encode("password"));
+
+            Role demoRole = roleRepository.findByName(ROLE_DEMO).orElseThrow(() -> new EntityNotFoundException("role not found"));
+            Set<Role> demoRoles = new HashSet<>();
+            demoRoles.add(demoRole);
+            demoUser.setRoles(demoRoles);
+            userRepository.save(demoUser);
         }
 
         User user = userRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("user not found"));
