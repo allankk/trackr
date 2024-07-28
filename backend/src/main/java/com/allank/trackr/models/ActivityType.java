@@ -28,6 +28,16 @@ public class ActivityType {
     @ManyToMany(mappedBy = "activityTypes")
     private List<ActivitySession> activitySessions = new ArrayList<>();
 
+    public ActivityType() {}
+
+    public ActivityType(String name, String description, boolean isDefault, User user, List<Metric> metrics) {
+        this.name = name;
+        this.description = description;
+        this.isDefault = isDefault;
+        this.user = user;
+        this.metrics = metrics;
+    }
+
     public String getName() {
         return name;
     }

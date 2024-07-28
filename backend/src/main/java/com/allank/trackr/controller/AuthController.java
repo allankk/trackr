@@ -1,12 +1,12 @@
 package com.allank.trackr.controller;
 
-import com.allank.trackr.models.Erole;
-import com.allank.trackr.models.Role;
-import com.allank.trackr.models.User;
+import com.allank.trackr.models.*;
 import com.allank.trackr.dto.auth.LoginRequest;
 import com.allank.trackr.dto.auth.RegisterRequest;
 import com.allank.trackr.dto.auth.JwtResponse;
 import com.allank.trackr.dto.response.MessageDto;
+import com.allank.trackr.repository.ActivityTypeRepository;
+import com.allank.trackr.repository.MetricRepository;
 import com.allank.trackr.repository.RoleRepository;
 import com.allank.trackr.repository.UserRepository;
 import com.allank.trackr.security.jwt.JwtUtils;
@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,12 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    ActivityTypeRepository activityTypeRepository;
+
+    @Autowired
+    MetricRepository metricRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -96,10 +103,28 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        createAndAssociateDefaultActivityTypes(savedUser);
 
         return ResponseEntity.ok(new MessageDto("User Registered successfully"));
     }
 
+    private void createAndAssociateDefaultActivityTypes(User user) {
+        Metric distMetric = metricRepository.findByName("Distance");
+        Metric timeMetric = metricRepository.findByName("Time");
 
+        if (distMetric == null || timeMetric == null) {
+            throw new RuntimeException("Error: Required metrics are not found");
+        }
+
+        List<ActivityType> defaultActivityTypes = Arrays.asList(
+                new ActivityType("Running", "Running activity", true, user, Arrays.asList(distMetric, timeMetric)),
+                new ActivityType("Cycling", "Cycling activity", true, user, Arrays.asList(distMetric, timeMetric))
+        );
+
+        for (ActivityType activityType : defaultActivityTypes) {
+            activityTypeRepository.save(activityType);
+        }
+    }
 }

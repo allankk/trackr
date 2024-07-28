@@ -73,7 +73,6 @@ public class ActivityGroupService {
         ActivityGroup activityGroup = activityGroupRepository.findById(activityGroupId).orElseThrow(() -> new IllegalArgumentException("activity group not found"));
 
         if (activityGroup.getUser().getId().equals(userId)) {
-            System.out.println("deleting activitytype");
             activityGroupRepository.delete(activityGroup);
         } else {
             throw new RuntimeException("Activity group does not belong do the given user.");

@@ -11,7 +11,9 @@ import com.allank.trackr.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -115,7 +117,9 @@ public class ActivitySessionService {
     }
 
     public List<GroupedSessionResponseDto> getSessionByDate(Long userId, Instant sessionDate) {
-        List<ActivitySession> activitySessions = activitySessionRepository.findByDate(sessionDate);
+        Instant startOfDay = sessionDate.truncatedTo(ChronoUnit.DAYS);
+        Instant endOfDay = startOfDay.plus(Duration.ofDays(1));
+        List<ActivitySession> activitySessions = activitySessionRepository.findByDateAfterAndDateBefore(startOfDay, endOfDay);
 
         List<ActivitySession> userSessions = activitySessions.stream()
                 .filter(session -> session.getUser().getId().equals(userId))
