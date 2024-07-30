@@ -9,9 +9,9 @@
       <p class="text-lg mb-8 z-10 max-w-xl text-center opacity-80">
         Track all your fitness activities, study and work sessions effortlessly!
       </p>
-      <Button as="router-link" label="Sign up" class="w-full px-6 py-3 max-w-72 mt-4 opacity-90 z-10"
+      <Button v-if="!loggedIn" as="router-link" label="Sign up" class="w-full px-6 py-3 max-w-72 mt-4 opacity-90 z-10"
         to="/register"></Button>
-      <Button @click="handleDemoLogin" :loading="loading" label="Try with a demo account"
+      <Button v-if="!loggedIn" @click="handleDemoLogin" :loading="loading" label="Try with a demo account"
         class="w-full px-6 mt-4 max-w-72 opacity-90 z-10"></Button>
       <div class="absolute inset-0 bg-black opacity-50"></div>
     </div>

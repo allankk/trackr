@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -45,12 +47,22 @@ public class DemoDataService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private static final ZoneId TALLINN_ZONE_ID = ZoneId.of("Europe/Tallinn");
+
     @PostConstruct
     public void init() {
         if (userRepository.count() == 0) {
             initDemoUser();
         }
     }
+
+    private Instant getStartOfDayXDaysAgo(int daysAgo) {
+        return LocalDate.now(TALLINN_ZONE_ID)
+                .minusDays(daysAgo)
+                .atStartOfDay(TALLINN_ZONE_ID)
+                .toInstant();
+    }
+
 
     private void initDemoUser() {
         String hashedPassword = passwordEncoder.encode("password");
@@ -123,7 +135,7 @@ public class DemoDataService {
         ActivitySession session1 = new ActivitySession();
         session1.setUser(demoUser);
         session1.setNotes("Morning run");
-        session1.setDate(Instant.now().minus(10, ChronoUnit.DAYS));
+        session1.setDate(getStartOfDayXDaysAgo(10));
         session1.setActivityTypes(List.of(running));
         ActivitySession savedSession1 = activitySessionRepository.save(session1);
 
@@ -136,7 +148,7 @@ public class DemoDataService {
         ActivitySession session2 = new ActivitySession();
         session2.setUser(demoUser);
         session2.setNotes("Morning run");
-        session2.setDate(Instant.now().minus(7, ChronoUnit.DAYS));
+        session2.setDate(getStartOfDayXDaysAgo(7));
         session2.setActivityTypes(List.of(running));
         ActivitySession savedSession2 = activitySessionRepository.save(session2);
 
@@ -149,7 +161,7 @@ public class DemoDataService {
         ActivitySession session3 = new ActivitySession();
         session3.setUser(demoUser);
         session3.setNotes("Lunch run");
-        session3.setDate(Instant.now().minus(5, ChronoUnit.DAYS));
+        session3.setDate(getStartOfDayXDaysAgo(5));
         session3.setActivityTypes(List.of(running));
         ActivitySession savedSession3 = activitySessionRepository.save(session3);
 
@@ -162,7 +174,7 @@ public class DemoDataService {
         ActivitySession session4 = new ActivitySession();
         session4.setUser(demoUser);
         session4.setNotes("Morning run and yoga");
-        session4.setDate(Instant.now().minus(3, ChronoUnit.DAYS));
+        session4.setDate(getStartOfDayXDaysAgo(3));
         session4.setActivityTypes(List.of(running, yoga));
         ActivitySession savedSession4 = activitySessionRepository.save(session4);
 
@@ -177,7 +189,7 @@ public class DemoDataService {
         ActivitySession session5 = new ActivitySession();
         session5.setUser(demoUser);
         session5.setNotes("Morning yoga");
-        session5.setDate(Instant.now().minus(2, ChronoUnit.DAYS));
+        session5.setDate(getStartOfDayXDaysAgo(2));
         session5.setActivityTypes(List.of(yoga));
         ActivitySession savedSession5 = activitySessionRepository.save(session5);
 
@@ -188,7 +200,7 @@ public class DemoDataService {
         ActivitySession session6 = new ActivitySession();
         session6.setUser(demoUser);
         session6.setNotes("Yoga practice");
-        session6.setDate(Instant.now().minus(1, ChronoUnit.DAYS));
+        session6.setDate(getStartOfDayXDaysAgo(1));
         session6.setActivityTypes(List.of(yoga));
         ActivitySession savedSession6 = activitySessionRepository.save(session6);
 
