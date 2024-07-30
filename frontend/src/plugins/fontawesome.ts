@@ -17,7 +17,7 @@ library.add(
   faUser,
   faUserPlus,
   faSignInAlt,
-  faSignOutAlt
+  faSignOutAlt,
 );
 
 export { FontAwesomeIcon };

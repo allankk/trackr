@@ -31,7 +31,6 @@ const commonItems = [
         items: [
             { label: 'Home', icon: 'pi pi-fw pi-home', to: '/' },
             { label: 'About', icon: 'pi pi-fw pi-question', to: '/about' },
-            { label: 'Hello', icon: 'pi pi-fw pi-bookmark', to: '/hello' },
         ]
     }
 ];

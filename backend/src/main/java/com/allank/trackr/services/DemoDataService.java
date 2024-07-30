@@ -140,7 +140,7 @@ public class DemoDataService {
         session2.setActivityTypes(List.of(running));
         ActivitySession savedSession2 = activitySessionRepository.save(session2);
 
-        ActivitySessionMetric session2Metric1 = createActivitySessionMetric(savedSession2, running, distMetric, kilometer, 5000);
+        ActivitySessionMetric session2Metric1 = createActivitySessionMetric(savedSession2, running, distMetric, kilometer, 5500);
         activitySessionMetricRepository.save(session2Metric1);
         ActivitySessionMetric session2Metric2 = createActivitySessionMetric(savedSession2, running, timeMetric, minute, 2160);
         activitySessionMetricRepository.save(session2Metric2);
@@ -153,7 +153,7 @@ public class DemoDataService {
         session3.setActivityTypes(List.of(running));
         ActivitySession savedSession3 = activitySessionRepository.save(session3);
 
-        ActivitySessionMetric session3Metric1 = createActivitySessionMetric(savedSession3, running, distMetric, kilometer, 5000);
+        ActivitySessionMetric session3Metric1 = createActivitySessionMetric(savedSession3, running, distMetric, kilometer, 5800);
         activitySessionMetricRepository.save(session3Metric1);
         ActivitySessionMetric session3Metric2 = createActivitySessionMetric(savedSession3, running, timeMetric, minute, 2100);
         activitySessionMetricRepository.save(session3Metric2);
@@ -166,7 +166,7 @@ public class DemoDataService {
         session4.setActivityTypes(List.of(running, yoga));
         ActivitySession savedSession4 = activitySessionRepository.save(session4);
 
-        ActivitySessionMetric session4Metric1 = createActivitySessionMetric(savedSession4, running, distMetric, kilometer, 4000);
+        ActivitySessionMetric session4Metric1 = createActivitySessionMetric(savedSession4, running, distMetric, kilometer, 6000);
         activitySessionMetricRepository.save(session4Metric1);
         ActivitySessionMetric session4Metric2 = createActivitySessionMetric(savedSession4, running, timeMetric, minute, 1800);
         activitySessionMetricRepository.save(session4Metric2);
@@ -178,7 +178,7 @@ public class DemoDataService {
         session5.setUser(demoUser);
         session5.setNotes("Morning yoga");
         session5.setDate(Instant.now().minus(2, ChronoUnit.DAYS));
-        session5.setActivityTypes(List.of(running, yoga));
+        session5.setActivityTypes(List.of(yoga));
         ActivitySession savedSession5 = activitySessionRepository.save(session5);
 
         ActivitySessionMetric session5Metric1 = createActivitySessionMetric(savedSession5, yoga, timeMetric, minute, 2100);
@@ -189,7 +189,7 @@ public class DemoDataService {
         session6.setUser(demoUser);
         session6.setNotes("Yoga practice");
         session6.setDate(Instant.now().minus(1, ChronoUnit.DAYS));
-        session6.setActivityTypes(List.of(running, yoga));
+        session6.setActivityTypes(List.of(yoga));
         ActivitySession savedSession6 = activitySessionRepository.save(session6);
 
         ActivitySessionMetric session6Metric1 = createActivitySessionMetric(savedSession6, yoga, timeMetric, minute, 2100);

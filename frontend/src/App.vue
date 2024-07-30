@@ -4,7 +4,7 @@
     <div>
       <SideNav />
     </div>
-    <div class="layout-main-container relative">
+    <div class="layout-main-container relative flex justify-center" :class="{ 'guest': !loggedIn }">
       <Toast class="mt-14 xl:mr-20" />
       <div class="layout-main">
         <router-view v-slot="{ Component }">
@@ -20,12 +20,16 @@
 <script setup>
 import { useLayout } from '@/components/menu/menuLayout';
 import { computed, watch, ref } from 'vue';
+import { useStore } from 'vuex';
 import TopNav from './components/menu/TopNav.vue';
 import SideNav from './components/menu/SideNav.vue';
 import Toast from 'primevue/toast';
 
 const { layoutState, isSidebarActive } = useLayout();
 const outsideClickListener = ref(null);
+
+const store = useStore();
+const loggedIn = computed(() => store.state.auth.status.loggedIn);
 
 const containerClass = computed(() => {
   return {
@@ -99,4 +103,12 @@ nav a.router-link-exact-active {
 .fade-leave-active {
   transition: opacity 0.1s ease-out;
 }
+
+@media (min-width: 1025px) and (max-width: 1279px) {
+
+  .layout-wrapper .layout-main-container.guest {
+    margin-left: 0;
+  }
+}
+
 </style>

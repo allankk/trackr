@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import HelloView from "../views/HelloView.vue";
 import LoginCard from "../components/LoginCard.vue";
 import RegisterCard from "../components/RegisterCard.vue";
 import ProfileView from "../views/ProfileView.vue";
@@ -22,11 +21,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "about",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
-  {
-    path: "/hello",
-    name: "hello",
-    component: HelloView,
   },
   {
     path: "/login",
