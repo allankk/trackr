@@ -3,6 +3,10 @@ FROM maven:3.6.3-openjdk-17 as build
 ADD . /trackr
 WORKDIR /trackr
 
+ARG SPRING_DATASOURCE_URL
+ARG SPRING_DATASOURCE_USERNAME
+ARG SPRING_DATASOURCE_PASSWORD
+
 RUN mvn clean install
 
 FROM openjdk:17.0.2-jdk
