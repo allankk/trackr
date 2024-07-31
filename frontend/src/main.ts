@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@/plugins/fontawesome'
 import PrimeVue, { defaultOptions } from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 
+
 createApp(App)
     .use(router)
     .use(store)
