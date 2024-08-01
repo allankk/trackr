@@ -11,6 +11,7 @@ import com.allank.trackr.models.ActivityType;
 import com.allank.trackr.models.Unit;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Comparator;
@@ -22,9 +23,9 @@ import java.util.stream.Collectors;
 public class ActivitySessionResponseMapper {
 
     public List<GroupedSessionResponseDto> toGroupedDtos(List<ActivitySession> sessions) {
-        Map<LocalDate, List<SessionResponseDto>> groupedByDate = sessions.stream()
+        Map<Instant, List<SessionResponseDto>> groupedByDate = sessions.stream()
                 .map(this::toDto)
-                .collect(Collectors.groupingBy(session -> session.date().atZone(ZoneId.systemDefault()).toLocalDate()));
+                .collect(Collectors.groupingBy(SessionResponseDto::date));
 
         return groupedByDate.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))

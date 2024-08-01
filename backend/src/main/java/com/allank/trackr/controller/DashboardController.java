@@ -2,7 +2,6 @@ package com.allank.trackr.controller;
 
 import com.allank.trackr.dto.response.dashboard.ResultsDto;
 import com.allank.trackr.dto.response.dashboard.SessionDatesDto;
-import com.allank.trackr.repository.ActivitySessionRepository;
 import com.allank.trackr.security.services.UserDetailsImpl;
 import com.allank.trackr.services.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.List;
 

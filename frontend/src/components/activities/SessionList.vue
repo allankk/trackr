@@ -96,11 +96,13 @@ const loading = ref(true);
 const formatDate = (dateString) => {
   const date = new Date(dateString);
 
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+
   const dayFormatter = new Intl.DateTimeFormat('en-GB', { weekday: 'long' });
-
   const dayOfWeek = dayFormatter.format(date);
-
-  return `${dateString} ${dayOfWeek}`;
+  return `${year}-${month}-${day} ${dayOfWeek}`;
 };
 
 const openConfirmation = (setActiveSession) => {
