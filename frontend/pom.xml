@@ -40,9 +40,7 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <!-- optional: default phase is "generate-resources" -->
                         <phase>generate-resources</phase>
-                        <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
                             <arguments>install</arguments>
                         </configuration>
@@ -57,7 +55,6 @@
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
-                    <!-- Run Unit tests with Jest -->
                     <execution>
                         <id>npm run test:unit</id>
                         <goals>
@@ -68,19 +65,6 @@
                             <arguments>run test:unit</arguments>
                         </configuration>
                     </execution>
-                    <!-- Run End2End tests with Nightwatch -->
-                    <!--
-                    <execution>
-                    <id>npm run test:e2e</id>
-                    <goals>
-                        <goal>npm</goal>
-                    </goals>
-                    <phase>test</phase>
-                    <configuration>
-                          <arguments>run test:e2e</arguments>
-                    </configuration>
-                    </execution>
-                    -->
                 </executions>
             </plugin>
         </plugins>

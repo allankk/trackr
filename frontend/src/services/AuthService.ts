@@ -1,8 +1,6 @@
 import axios from "axios";
 
-// TODO: get from env
-//const API_AUTH_URL = import.meta.env.VITE_BACKEND_API_URL + "auth/";
-const API_AUTH_URL = "http://localhost:8098/api/auth/";
+const API_AUTH_URL = process.env.VUE_APP_BACKEND_API_URL + "auth/";
 
 class AuthService {
   login(email: string, password: string) {

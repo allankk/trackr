@@ -1,0 +1,23 @@
+FROM maven:3.6.3-openjdk-17 as build
+
+ADD . /trackr
+WORKDIR /trackr
+
+ARG SPRING_DATASOURCE_URL
+ARG SPRING_DATASOURCE_USERNAME
+ARG SPRING_DATASOURCE_PASSWORD
+ARG VUE_APP_BACKEND_API_URL
+
+EXPOSE 8098
+
+RUN mvn clean install
+
+FROM openjdk:17.0.2-jdk
+
+VOLUME /tmp
+
+COPY --from=0 "/trackr/backend/target/backend-0.0.1-SNAPSHOT.jar" app.jar
+
+ENV JAVA_OPTS=""
+
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]

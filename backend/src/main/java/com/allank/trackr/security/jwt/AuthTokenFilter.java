@@ -59,7 +59,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return headerAuth.substring(7, headerAuth.length());
         }
 
-        logger.error("returning auth null");
         return null;
     }
 }

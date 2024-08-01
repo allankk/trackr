@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_AUTH_URL = "http://localhost:8098/api/";
+const API_AUTH_URL = process.env.VUE_APP_BACKEND_API_URL;
 
 interface ActivityType {
   name: string;
