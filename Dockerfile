@@ -8,7 +8,6 @@ ARG SPRING_DATASOURCE_USERNAME
 ARG SPRING_DATASOURCE_PASSWORD
 ARG VUE_APP_BACKEND_API_URL
 
-EXPOSE 8080
 EXPOSE 8098
 
 RUN mvn clean install
@@ -21,4 +20,4 @@ COPY --from=0 "/trackr/backend/target/backend-0.0.1-SNAPSHOT.jar" app.jar
 
 ENV JAVA_OPTS=""
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]
