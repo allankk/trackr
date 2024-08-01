@@ -62,7 +62,7 @@ const itemClick = (event, item) => {
 
     if (item.action == 'logout') {
         store.dispatch('auth/logout');
-        router.push('/login');
+        router.push('/home');
     }
 };
 

@@ -1,7 +1,7 @@
 <template>
   <nav class="py-4 border-b sticky top-0 border-slate-400 layout-topbar-menu h-14 z-20 bg-white">
     <a href="/">
-      <img alt="Trackr logo" class="max-h-10 absolute top-2" src="@/assets/trackr-logo.png">
+      <img alt="Trackr logo" class="max-h-10 absolute top-2" src="@/assets/trackr-logo-transp.png">
     </a>
     <button v-if="isScreenSmall || currentUser"
       class="p-link layout-menu-button float-right lg:hidden layout-topbar-button" @click="onMenuToggle()">
