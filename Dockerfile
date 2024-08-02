@@ -1,4 +1,4 @@
-FROM maven:3.6.3-openjdk-17 as build
+FROM maven:3.6.3-openjdk-17 AS build
 
 ADD . /trackr
 WORKDIR /trackr
