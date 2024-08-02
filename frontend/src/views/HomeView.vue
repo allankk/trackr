@@ -23,9 +23,9 @@
         <div class="feature-item mb-6">
           <h2 class="text-2xl font-semibold mb-2">Dashboard</h2>
           <p class="text-gray-600 mb-4">
-            Easily view and manage all your recorded sessions with our intuitive dashboard.
+            Easily view and manage all your recorded sessions with an intuitive dashboard.
           </p>
-          <Image src="/trackr-screen-new-session.png" alt="Image" width="500" preview class="shadow-lg p-4 border" />
+          <Image src="/trackr-screen-dash.png" alt="Image" width="500" preview class="shadow-lg p-4 border" />
         </div>
         <Divider />
         <div class="feature-item mt-4">
